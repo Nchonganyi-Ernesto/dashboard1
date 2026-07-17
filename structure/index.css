@@ -24,7 +24,7 @@ body {
     width: 280px;
     background: linear-gradient(135deg, #043D50 0%, #072746 100%);
     backdrop-filter: blur(10px);
-    padding: 20px;
+    padding: 48px 20px;
     overflow-y: auto;
     margin: 20px 0 20px 50px;
     border-radius: 16px;
@@ -36,6 +36,8 @@ body {
 .sidebar-content {
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
+    gap: 50px;
     height: 100%;
 }
 
@@ -44,8 +46,6 @@ body {
     display: flex;
     align-items: flex-start;
     gap: 15px;
-    margin-bottom: 40px;
-    margin-top: 15px;
 }
 
 .logo-icon {
@@ -82,7 +82,6 @@ body {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    margin-bottom: 30px;
 }
 
 .nav-item {
@@ -120,7 +119,6 @@ body {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    margin-bottom: 20px;
 }
 
 .filter-group {
@@ -391,6 +389,18 @@ body {
     margin-bottom: 20px;
 }
 
+.chart-panel-small .chart-panel-header {
+    position: relative;
+    justify-content: center;
+}
+
+.chart-panel-small .chart-panel-title {
+    width: 100%;
+    text-align: center;
+}
+
+
+
 .chart-panel-title {
     font-size: 17px;
     font-weight: 700;
@@ -524,11 +534,18 @@ body {
 }
 
 .donut-wrap {
+    position: relative;
     flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 10px 0;
+}
+
+.donut-legend {
+    position: absolute;
+    top: 4px;
+    right: 28px;
 }
 
 .donut-chart {
@@ -741,24 +758,43 @@ body {
 .sv-gridlines {
     position: absolute;
     top: 0;
-    right: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    left: 0;
     height: 100%;
     font-size: 11px;
     font-weight: 500;
     color: #b0aca5;
 }
 
+.sv-gridlines span {
+    position: absolute;
+    left: 0;
+    transform: translateY(-50%);
+}
+
+.sv-grid-lines {
+    position: absolute;
+    top: 0;
+    left: 44px;
+    width: calc(100% - 44px);
+    height: 100%;
+}
+
+.sv-grid-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.08);
+}
+
 .sv-area-chart {
     position: absolute;
     top: 0;
-    left: 0;
+    left: 44px;
     width: calc(100% - 44px);
     height: 100%;
 }
 
 .sv-months {
-    padding-right: 44px;
+    padding-left: 44px;
 }
