@@ -11,6 +11,7 @@ html, body {
 
 body {
     background: #f4f6fb;
+    overflow-x: hidden;
 }
 
 /* ===== HEADER ===== */
@@ -30,9 +31,9 @@ body {
     top: 0;
     right: 0;
     bottom: 0;
-    width: 44%;
+    width: 60%;
     background: linear-gradient(100deg, #1d4ed8 0%, #2f6fd6 60%, #3f8fe0 100%);
-    clip-path: polygon(32% 0%, 100% 0%, 100% 100%, 50% 100%);
+    clip-path: polygon(30% 0%, 100% 0%, 100% 100%, 46% 100%);
     z-index: 0;
 }
 
@@ -85,6 +86,7 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-shrink: 0;
 }
 
 .nav-tab {
@@ -93,9 +95,10 @@ body {
     color: rgba(255, 255, 255, 0.85);
     font-size: 14px;
     font-weight: 600;
-    padding: 11px 22px;
+    padding: 11px 18px;
     border-radius: 8px;
     cursor: pointer;
+    white-space: nowrap;
     transition: background 0.25s ease, color 0.25s ease;
 }
 
@@ -464,6 +467,172 @@ body {
     font-size: 13px;
     font-weight: 600;
     color: #9aa2b8;
+}
+
+/* Weekly CPC */
+.cpc-card .chart-card-title {
+    font-size: 19px;
+    font-weight: 800;
+}
+
+.cpc-chart {
+    position: relative;
+    height: 130px;
+    margin-bottom: 6px;
+}
+
+.cpc-gridlines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 28px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #9aa2b8;
+}
+
+.cpc-gridlines span {
+    position: absolute;
+    left: 0;
+    transform: translateY(-50%);
+}
+
+.cpc-gridlines span:nth-child(1) {
+    top: 0;
+}
+
+.cpc-gridlines span:nth-child(2) {
+    top: 100%;
+}
+
+.cpc-bars {
+    position: absolute;
+    top: 0;
+    left: 32px;
+    right: 0;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+.cpc-bar-group {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 2px;
+    height: 100%;
+}
+
+.cpc-bar {
+    flex: 1;
+    border-radius: 2px 2px 0 0;
+}
+
+.cpc-months {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 32px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #9aa2b8;
+}
+
+/* ===== TABLES ROW ===== */
+.tables-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.table-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 8px 20px;
+    box-shadow: 0 4px 10px rgba(20, 30, 60, 0.08);
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th {
+    text-align: right;
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a2340;
+    padding: 16px 8px 12px;
+    white-space: nowrap;
+}
+
+.data-table th.col-source,
+.data-table td.col-source {
+    text-align: left;
+}
+
+.data-table td {
+    text-align: right;
+    padding: 8px 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    border-top: 1px solid #eef1f6;
+}
+
+.data-table td.col-source {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    color: #374151;
+    white-space: nowrap;
+}
+
+.expand-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border: 1px solid #d5dae3;
+    border-radius: 3px;
+    font-size: 11px;
+    line-height: 1;
+    color: #9aa2b8;
+    flex-shrink: 0;
+}
+
+.cell-pill {
+    display: inline-block;
+    min-width: 44px;
+    padding: 5px 10px;
+    border-radius: 6px;
+}
+
+.pill-blue {
+    background: #cfe3fb;
+}
+
+.pill-gray {
+    background: #e5e7eb;
+}
+
+.pill-green {
+    background: #c9f0d8;
+}
+
+.pill-tan {
+    background: #f5e0c3;
+}
+
+.pill-purple {
+    background: #e6d9f7;
 }
 
 /* ===== SIDEBAR COLUMN ===== */
