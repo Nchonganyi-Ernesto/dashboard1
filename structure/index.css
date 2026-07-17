@@ -21,15 +21,16 @@ body {
 
 /* ===== SIDEBAR ===== */
 .sidebar {
-    width: 240px;
+    width: 280px;
     background: linear-gradient(135deg, #043D50 0%, #072746 100%);
     backdrop-filter: blur(10px);
     padding: 20px;
     overflow-y: auto;
-    border-right: 1px solid rgba(70, 156, 95, 0.2);
     margin: 20px 0 20px 50px;
     border-radius: 16px;
-    height: fit-content;
+    min-height: 780px;
+    position: relative;
+    z-index: 2;
 }
 
 .sidebar-content {
@@ -166,7 +167,17 @@ body {
 /* Main Content */
 .main-content {
     flex: 1;
-    padding: 40px;
+    padding: 20px 50px 20px 0;
+}
+
+.main-panel {
+    background: linear-gradient(135deg, #3da061 23%, #044d75 100%);
+    border-radius: 0 20px 20px 0;
+    padding: 30px;
+    min-height: 100%;
+    margin-left: -12px;
+    position: relative;
+    z-index: 1;
 }
 
 /* ===== CARDS SECTION ===== */
@@ -558,7 +569,7 @@ body {
 /* ===== TOP-3 SALES MANAGERS + SALES VOLUME SECTION ===== */
 .managers-section {
     display: grid;
-    grid-template-columns: 2fr 0.8fr;
+    grid-template-columns: 1.8fr 0.8fr;
     gap: 30px;
     margin-top: 30px;
 }
@@ -574,12 +585,22 @@ body {
     grid-column: 1 / 4;
 }
 
-.header-kpi,
+.header-kpi {
+    grid-column: 4;
+    font-size: 12px;
+    font-weight: 600;
+    color: #9a958d;
+    text-align: center;
+    width: 100%;
+}
+
 .header-volume {
+    grid-column: 5;
     font-size: 12px;
     font-weight: 600;
     color: #9a958d;
     text-align: right;
+    padding-right: 42px;
 }
 
 .manager-row {
@@ -594,23 +615,30 @@ body {
 .manager-row::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: 60px;
-    width: 60%;
-    height: 8px;
-    clip-path: polygon(0 45%, 100% 0%, 100% 100%, 0 55%);
+    bottom: 6px;
+    left: 108px;
+    right: 0;
+    height: 6px;
+    border-radius: 3px;
+    z-index: 0;
+}
+
+.manager-kpi,
+.manager-volume {
+    position: relative;
+    z-index: 1;
 }
 
 .manager-row-1::before {
-    background: linear-gradient(90deg, #f2795a 0%, rgba(242, 121, 90, 0) 100%);
+    background: linear-gradient(90deg, #f2795a 0%, rgba(242, 121, 90, 0.35) 100%);
 }
 
 .manager-row-2::before {
-    background: linear-gradient(90deg, #3b82f6 0%, rgba(59, 130, 246, 0) 100%);
+    background: linear-gradient(90deg, #3b82f6 0%, rgba(59, 130, 246, 0.35) 100%);
 }
 
 .manager-row-3::before {
-    background: linear-gradient(90deg, #14b8a6 0%, rgba(20, 184, 166, 0) 100%);
+    background: linear-gradient(90deg, #14b8a6 0%, rgba(20, 184, 166, 0.35) 100%);
 }
 
 .manager-rank {
@@ -660,7 +688,7 @@ body {
     font-size: 14px;
     font-weight: 600;
     color: #2b2b2b;
-    text-align: right;
+    text-align: center;
 }
 
 .manager-volume {
@@ -668,6 +696,7 @@ body {
     font-weight: 700;
     color: #2b2b2b;
     text-align: right;
+    padding-right: 42px;
 }
 
 /* Sales Volume comparison panel */
@@ -722,35 +751,12 @@ body {
     color: #b0aca5;
 }
 
-.sv-bars {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 6px;
+.sv-area-chart {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc(100% - 44px);
     height: 100%;
-    padding-right: 44px;
-}
-
-.sv-bar-group {
-    flex: 1;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    gap: 3px;
-    height: 100%;
-}
-
-.sv-bar {
-    flex: 1;
-    border-radius: 3px 3px 0 0;
-}
-
-.sv-bar-sales {
-    background: #14b8a6;
-}
-
-.sv-bar-purchases {
-    background: #f2994a;
 }
 
 .sv-months {

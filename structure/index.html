@@ -103,6 +103,7 @@
 
         <!-- Main Content -->
         <main class="main-content">
+            <div class="main-panel">
             <!-- Cards Section -->
             <section class="cards-section">
                 <div class="card card-1">
@@ -329,20 +330,17 @@
                             <span>200 K</span>
                             <span>100 K</span>
                         </div>
-                        <div class="sv-bars">
-                            <div class="sv-bar-group"><div class="sv-bar sv-bar-sales" style="height:34%"></div><div class="sv-bar sv-bar-purchases" style="height:28%"></div></div>
-                            <div class="sv-bar-group"><div class="sv-bar sv-bar-sales" style="height:40%"></div><div class="sv-bar sv-bar-purchases" style="height:36%"></div></div>
-                            <div class="sv-bar-group"><div class="sv-bar sv-bar-sales" style="height:48%"></div><div class="sv-bar sv-bar-purchases" style="height:44%"></div></div>
-                            <div class="sv-bar-group"><div class="sv-bar sv-bar-sales" style="height:55%"></div><div class="sv-bar sv-bar-purchases" style="height:50%"></div></div>
-                            <div class="sv-bar-group"><div class="sv-bar sv-bar-sales" style="height:62%"></div><div class="sv-bar sv-bar-purchases" style="height:58%"></div></div>
-                            <div class="sv-bar-group"><div class="sv-bar sv-bar-sales" style="height:70%"></div><div class="sv-bar sv-bar-purchases" style="height:64%"></div></div>
-                            <div class="sv-bar-group"><div class="sv-bar sv-bar-sales" style="height:78%"></div><div class="sv-bar sv-bar-purchases" style="height:70%"></div></div>
-                            <div class="sv-bar-group"><div class="sv-bar sv-bar-sales" style="height:85%"></div><div class="sv-bar sv-bar-purchases" style="height:76%"></div></div>
-                            <div class="sv-bar-group"><div class="sv-bar sv-bar-sales" style="height:76%"></div><div class="sv-bar sv-bar-purchases" style="height:68%"></div></div>
-                            <div class="sv-bar-group"><div class="sv-bar sv-bar-sales" style="height:82%"></div><div class="sv-bar sv-bar-purchases" style="height:72%"></div></div>
-                            <div class="sv-bar-group"><div class="sv-bar sv-bar-sales" style="height:68%"></div><div class="sv-bar sv-bar-purchases" style="height:60%"></div></div>
-                            <div class="sv-bar-group"><div class="sv-bar sv-bar-sales" style="height:56%"></div><div class="sv-bar sv-bar-purchases" style="height:48%"></div></div>
-                        </div>
+                        <svg class="sv-area-chart" viewBox="0 0 480 140" preserveAspectRatio="none">
+                            <defs>
+                                <linearGradient id="salesAreaGradient" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#14b8a6" stop-opacity="0.45"></stop>
+                                    <stop offset="100%" stop-color="#14b8a6" stop-opacity="0"></stop>
+                                </linearGradient>
+                            </defs>
+                            <polygon points="20,105 60,95 100,100 140,85 180,70 220,60 260,45 300,38 340,50 380,58 420,72 460,65 460,140 20,140" fill="url(#salesAreaGradient)"></polygon>
+                            <polyline points="20,105 60,95 100,100 140,85 180,70 220,60 260,45 300,38 340,50 380,58 420,72 460,65" fill="none" stroke="#14b8a6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                            <polyline points="20,112 60,102 100,108 140,92 180,78 220,66 260,52 300,44 340,56 380,64 420,78 460,72" fill="none" stroke="#f2994a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                        </svg>
                     </div>
                     <div class="chart-months sv-months">
                         <span>JAN</span>
@@ -360,8 +358,7 @@
                     </div>
                 </div>
             </section>
-
-            <!-- Content will go here -->
+            </div>
         </main>
     </div>
 
