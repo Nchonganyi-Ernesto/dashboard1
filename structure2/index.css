@@ -127,7 +127,7 @@ body {
 /* ===== LAYOUT ===== */
 .dashboard-body {
     display: flex;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 24px;
     padding: 24px 32px;
 }
@@ -272,14 +272,14 @@ body {
 
 .channel-label {
     position: absolute;
-    font-size: 14px;
+    font-size: 11px;
     font-weight: 600;
     color: #6b7280;
     white-space: nowrap;
 }
 
 .channel-label b {
-    font-weight: 800;
+    font-weight: 700;
     color: #374151;
 }
 
@@ -615,25 +615,47 @@ body {
     border-radius: 6px;
 }
 
-.pill-blue {
-    background: #cfe3fb;
-}
+/* Total users - blue family */
+.pill-blue-1 { background: #eef5fd; color: #1e3a5f; }
+.pill-blue-2 { background: #bcdafa; color: #12335c; }
+.pill-blue-3 { background: #7fb8f2; color: #0b2c52; }
+.pill-blue-4 { background: #4791e8; color: #ffffff; }
 
-.pill-gray {
-    background: #e5e7eb;
-}
+/* Sessions - green family */
+.pill-green-1 { background: #ecf9f0; color: #1c4a2e; }
+.pill-green-2 { background: #b3ecc9; color: #164327; }
+.pill-green-3 { background: #6fdb98; color: #0f3a1c; }
+.pill-green-4 { background: #33c467; color: #ffffff; }
 
-.pill-green {
-    background: #c9f0d8;
-}
+/* Engaged sessions - teal family */
+.pill-teal-1 { background: #e9faf5; color: #114a3d; }
+.pill-teal-2 { background: #a9ecdb; color: #0d4436; }
+.pill-teal-3 { background: #5fdcc0; color: #0a3b2f; }
+.pill-teal-4 { background: #1fc7a3; color: #ffffff; }
 
-.pill-tan {
-    background: #f5e0c3;
-}
+/* Purchases - orange family */
+.pill-orange-1 { background: #fdf3e4; color: #5b3d14; }
+.pill-orange-2 { background: #f6d9a6; color: #573a10; }
+.pill-orange-3 { background: #edb965; color: #4a2f0a; }
+.pill-orange-4 { background: #e29a2e; color: #ffffff; }
 
-.pill-purple {
-    background: #e6d9f7;
-}
+/* Purchase rate - purple family */
+.pill-purple-1 { background: #f5eefd; color: #3d1f5c; }
+.pill-purple-2 { background: #d9bff5; color: #391a58; }
+.pill-purple-3 { background: #b98aec; color: #2f1350; }
+.pill-purple-4 { background: #9758e0; color: #ffffff; }
+
+/* CPC - gray family */
+.pill-gray-1 { background: #f3f4f6; color: #374151; }
+.pill-gray-2 { background: #dcdfe4; color: #2f333c; }
+.pill-gray-3 { background: #b7bcc6; color: #262a31; }
+.pill-gray-4 { background: #8b91a0; color: #ffffff; }
+
+/* CPM - pink family */
+.pill-pink-1 { background: #fdeef1; color: #6b1d33; }
+.pill-pink-2 { background: #f8cdd6; color: #641a2f; }
+.pill-pink-3 { background: #f0a0b3; color: #591628; }
+.pill-pink-4 { background: #e56f8c; color: #ffffff; }
 
 /* ===== SIDEBAR COLUMN ===== */
 .sidebar-column {
@@ -642,16 +664,19 @@ body {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    height: 100%;
 }
 
 /* ===== FILTERS PANEL ===== */
 .filters-panel {
+    flex: 1;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     gap: 26px;
     background: #ffffff;
     border-radius: 14px;
-    padding: 24px 20px;
+    padding: 28px 20px;
     box-shadow: 0 4px 14px rgba(20, 30, 60, 0.08);
 }
 
@@ -778,6 +803,7 @@ body {
 
 /* ===== HELP CARD ===== */
 .help-card {
+    flex-shrink: 0;
     background: #ffffff;
     border-radius: 14px;
     padding: 20px;
@@ -874,4 +900,284 @@ body {
 .globe-icon {
     background: #2f6fd6;
     border-radius: 50%;
+}
+
+/* ===== BOTTOM BANNER ===== */
+.bottom-banner {
+    position: relative;
+    background: linear-gradient(90deg, #3d2563 0%, #5a3d7a 50%, #3d2563 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 16px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    border-radius: 0;
+    z-index: 1000;
+    margin-top: 24px;
+}
+
+/* ===== HAMBURGER MENU ===== */
+.hamburger-menu {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 8px;
+    margin-right: 12px;
+}
+
+.hamburger-menu span {
+    width: 24px;
+    height: 2.5px;
+    background: #ffffff;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+.hamburger-menu.active span:nth-child(1) {
+    transform: rotate(45deg) translate(8px, 8px);
+}
+
+.hamburger-menu.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger-menu.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 1024px) {
+    .kpi-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+    }
+
+    .analytics-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .sidebar-column {
+        width: 220px;
+    }
+
+    .filters-panel {
+        padding: 20px 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        padding: 16px 20px;
+    }
+
+    .hamburger-menu {
+        display: flex;
+    }
+
+    .header::before {
+        width: 100%;
+        clip-path: none;
+    }
+
+    .header-logo {
+        gap: 10px;
+    }
+
+    .header-title {
+        font-size: 18px;
+    }
+
+    .header-subtitle {
+        font-size: 10px;
+    }
+
+    .header-nav {
+        position: fixed;
+        top: -100%;
+        left: 0;
+        right: 0;
+        width: 100%;
+        flex-direction: column;
+        gap: 0;
+        background: linear-gradient(180deg, #1d4ed8 0%, #2f6fd6 100%);
+        padding: 0;
+        border-radius: 0;
+        height: auto;
+        max-height: none;
+        overflow: visible;
+        transition: top 0.3s ease;
+        z-index: 999;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .header-nav.active {
+        top: 60px;
+    }
+
+    .nav-tab {
+        border-radius: 0;
+        padding: 14px 20px;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        white-space: normal;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 15px;
+    }
+
+    .nav-tab:hover {
+        background: rgba(0, 0, 0, 0.1);
+        color: #ffffff;
+    }
+
+    .nav-tab.active {
+        background: rgba(58, 94, 168, 0.6);
+        color: #ffffff;
+        box-shadow: none;
+    }
+
+    .nav-tab.setup-btn {
+        background: rgba(255, 255, 255, 0.15);
+        box-shadow: none;
+        color: #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        margin: 10px 20px;
+        border-radius: 6px;
+    }
+
+    .nav-tab.setup-btn:hover {
+        background: rgba(255, 255, 255, 0.25);
+    }
+
+    .dashboard-body {
+        flex-direction: column;
+        gap: 16px;
+        padding: 16px;
+    }
+
+    .main-content {
+        min-width: 100%;
+    }
+
+    .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .kpi-card {
+        min-height: 100px;
+        padding: 14px;
+    }
+
+    .kpi-label {
+        font-size: 12px;
+    }
+
+    .kpi-value {
+        font-size: 18px;
+    }
+
+    .analytics-row {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-card {
+        padding: 16px;
+    }
+
+    .tables-row {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar-column {
+        width: 100%;
+        flex-direction: row;
+        gap: 16px;
+    }
+
+    .filters-panel {
+        flex: 1;
+    }
+
+    .help-card {
+        flex: 1;
+    }
+
+    .bottom-banner {
+        margin: 16px;
+        margin-top: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 12px 16px;
+    }
+
+    .logo-badge {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+    }
+
+    .header-title {
+        font-size: 14px;
+    }
+
+    .header-subtitle {
+        font-size: 9px;
+    }
+
+    .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .kpi-card {
+        min-height: 90px;
+        padding: 12px;
+    }
+
+    .kpi-label {
+        font-size: 11px;
+    }
+
+    .kpi-value {
+        font-size: 16px;
+    }
+
+    .chart-card {
+        padding: 12px;
+    }
+
+    .chart-card-title {
+        font-size: 13px;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 6px 4px;
+        font-size: 11px;
+    }
+
+    .sidebar-column {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .filters-panel,
+    .help-card {
+        flex: initial;
+    }
+
+    .bottom-banner {
+        padding: 12px 16px;
+        font-size: 12px;
+        margin: 12px;
+        margin-top: 12px;
+    }
 }

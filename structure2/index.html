@@ -12,6 +12,11 @@
 <body>
     <header class="header">
         <div class="header-logo">
+            <button class="hamburger-menu" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
             <div class="logo-badge">C</div>
             <div class="header-title-group">
                 <div class="header-title">Google Analytics PPC Dashboard</div>
@@ -19,7 +24,7 @@
             </div>
         </div>
 
-        <nav class="header-nav">
+        <nav class="header-nav" id="header-nav">
             <button class="nav-tab active">Overview</button>
             <button class="nav-tab">Dynamics</button>
             <button class="nav-tab setup-btn">Setup dashboard</button>
@@ -337,11 +342,83 @@
                             </tr>
                             <tr>
                                 <td class="col-source"><span class="expand-icon">+</span>linkedin</td>
-                                <td><span class="cell-pill pill-blue">727</span></td>
-                                <td><span class="cell-pill pill-gray">909</span></td>
-                                <td><span class="cell-pill pill-green">449</span></td>
-                                <td><span class="cell-pill pill-tan">124</span></td>
-                                <td><span class="cell-pill pill-purple">17.06%</span></td>
+                                <td><span class="cell-pill pill-blue-4">727</span></td>
+                                <td><span class="cell-pill pill-green-4">909</span></td>
+                                <td><span class="cell-pill pill-teal-4">449</span></td>
+                                <td><span class="cell-pill pill-orange-2">124</span></td>
+                                <td><span class="cell-pill pill-purple-1">17.06%</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-card">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th class="col-source">Ad source</th>
+                                <th>Ad spend</th>
+                                <th>Impressions</th>
+                                <th>Clicks</th>
+                                <th>CPC</th>
+                                <th>CPM</th>
+                                <th>CTR</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="col-source"><span class="expand-icon">+</span>Bing ads</td>
+                                <td><span class="cell-pill pill-purple-4">224</span></td>
+                                <td><span class="cell-pill pill-blue-3">67.4K</span></td>
+                                <td><span class="cell-pill pill-green-3">851</span></td>
+                                <td><span class="cell-pill pill-gray-1">0.26</span></td>
+                                <td><span class="cell-pill pill-pink-3">3.32</span></td>
+                                <td><span class="cell-pill pill-teal-2">1.23%</span></td>
+                            </tr>
+                            <tr>
+                                <td class="col-source"><span class="expand-icon">+</span>Google ads</td>
+                                <td><span class="cell-pill pill-purple-2">213</span></td>
+                                <td><span class="cell-pill pill-blue-2">66.0K</span></td>
+                                <td><span class="cell-pill pill-green-2">813</span></td>
+                                <td><span class="cell-pill pill-gray-2">0.26</span></td>
+                                <td><span class="cell-pill pill-pink-1">3.22</span></td>
+                                <td><span class="cell-pill pill-teal-2">1.23%</span></td>
+                            </tr>
+                            <tr>
+                                <td class="col-source"><span class="expand-icon">+</span>Linkedin ads</td>
+                                <td><span class="cell-pill pill-purple-3">216</span></td>
+                                <td><span class="cell-pill pill-blue-1">59.3K</span></td>
+                                <td><span class="cell-pill pill-green-2">811</span></td>
+                                <td><span class="cell-pill pill-gray-2">0.27</span></td>
+                                <td><span class="cell-pill pill-pink-4">3.64</span></td>
+                                <td><span class="cell-pill pill-teal-4">1.37%</span></td>
+                            </tr>
+                            <tr>
+                                <td class="col-source"><span class="expand-icon">+</span>Meta ads</td>
+                                <td><span class="cell-pill pill-purple-2">212</span></td>
+                                <td><span class="cell-pill pill-blue-4">69.1K</span></td>
+                                <td><span class="cell-pill pill-green-4">862</span></td>
+                                <td><span class="cell-pill pill-gray-1">0.25</span></td>
+                                <td><span class="cell-pill pill-pink-1">3.06</span></td>
+                                <td><span class="cell-pill pill-teal-3">1.25%</span></td>
+                            </tr>
+                            <tr>
+                                <td class="col-source"><span class="expand-icon">+</span>Snapchat ads</td>
+                                <td><span class="cell-pill pill-purple-1">211</span></td>
+                                <td><span class="cell-pill pill-blue-1">63.6K</span></td>
+                                <td><span class="cell-pill pill-green-1">760</span></td>
+                                <td><span class="cell-pill pill-gray-3">0.28</span></td>
+                                <td><span class="cell-pill pill-pink-3">3.32</span></td>
+                                <td><span class="cell-pill pill-teal-1">1.20%</span></td>
+                            </tr>
+                            <tr>
+                                <td class="col-source"><span class="expand-icon">+</span>TikTok ads</td>
+                                <td><span class="cell-pill pill-purple-1">209</span></td>
+                                <td><span class="cell-pill pill-blue-2">63.8K</span></td>
+                                <td><span class="cell-pill pill-green-1">716</span></td>
+                                <td><span class="cell-pill pill-gray-4">0.29</span></td>
+                                <td><span class="cell-pill pill-pink-2">3.27</span></td>
+                                <td><span class="cell-pill pill-teal-1">1.12%</span></td>
                             </tr>
                         </tbody>
                     </table>
@@ -479,6 +556,10 @@
         </div>
         </aside>
     </div>
+
+    <footer class="bottom-banner">
+        <span>Connect 70+ data sources with Coupler.io</span>
+    </footer>
 
     <script src="index.js"></script>
 </body>
