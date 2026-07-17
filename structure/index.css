@@ -798,3 +798,213 @@ body {
 .sv-months {
     padding-left: 44px;
 }
+
+/* ===== HAMBURGER MENU ===== */
+.hamburger-btn {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    width: 46px;
+    height: 46px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #043d50 0%, #072746 100%);
+    cursor: pointer;
+    position: fixed;
+    top: 24px;
+    left: 24px;
+    z-index: 60;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hamburger-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.38);
+}
+
+.hamburger-btn:active {
+    transform: scale(0.94);
+}
+
+.hamburger-line {
+    width: 22px;
+    height: 2.5px;
+    border-radius: 2px;
+    background: #ffffff;
+    transform-origin: center;
+    transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55),
+        opacity 0.25s ease,
+        width 0.3s ease,
+        background 0.3s ease;
+}
+
+.hamburger-btn.active {
+    background: linear-gradient(135deg, #14b8a6 0%, #0d6b4a 100%);
+}
+
+.hamburger-btn.active .hamburger-line:nth-child(1) {
+    transform: translateY(8.5px) rotate(45deg);
+}
+
+.hamburger-btn.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+    width: 0;
+}
+
+.hamburger-btn.active .hamburger-line:nth-child(3) {
+    transform: translateY(-8.5px) rotate(-45deg);
+}
+
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(4, 15, 20, 0.6);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+    z-index: 40;
+}
+
+.sidebar-overlay.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+body.no-scroll {
+    overflow: hidden;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1200px) {
+    .cards-section {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .charts-section,
+    .managers-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 900px) {
+    .hamburger-btn {
+        display: flex;
+    }
+
+    .sidebar-overlay {
+        display: block;
+    }
+
+    .dashboard-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 280px;
+        height: 100vh;
+        min-height: 100vh;
+        margin: 0;
+        border-radius: 0 20px 20px 0;
+        transform: translateX(-100%);
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 50;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        padding: 90px 24px 30px;
+        width: 100%;
+    }
+
+    .main-panel {
+        margin-left: 0;
+        border-radius: 20px;
+    }
+
+    .card-1,
+    .card-2,
+    .card-3,
+    .card-4 {
+        min-height: 120px;
+    }
+}
+
+@media (max-width: 700px) {
+    .cards-section {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-panel {
+        padding: 20px;
+    }
+
+    .managers-header-row,
+    .manager-row {
+        grid-template-columns: 44px 36px 1fr 70px 90px;
+    }
+
+    .manager-name {
+        font-size: 13px;
+    }
+
+    .header-kpi,
+    .manager-kpi {
+        padding-right: 0;
+    }
+
+    .header-volume,
+    .manager-volume {
+        padding-right: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        width: 85vw;
+        max-width: 300px;
+    }
+
+    .main-content {
+        padding: 84px 14px 20px;
+    }
+
+    .main-panel {
+        padding: 18px;
+    }
+
+    .chart-legend {
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .managers-header-row,
+    .manager-row {
+        grid-template-columns: 36px 32px 1fr 56px 74px;
+        gap: 2px;
+    }
+
+    .manager-name,
+    .manager-kpi,
+    .manager-volume {
+        font-size: 12px;
+    }
+
+    .sv-totals {
+        gap: 14px;
+    }
+
+    .sv-total {
+        font-size: 16px;
+    }
+}
