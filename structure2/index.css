@@ -189,6 +189,283 @@ body {
     background: linear-gradient(135deg, #a06be0 0%, #8b4fd6 100%);
 }
 
+/* ===== ANALYTICS CHARTS ROW ===== */
+.analytics-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.chart-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(20, 30, 60, 0.08);
+}
+
+.chart-card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a2340;
+    margin-bottom: 8px;
+}
+
+.channel-card .chart-card-title {
+    font-size: 19px;
+    font-weight: 800;
+}
+
+/* Traffic by channel donut */
+.channel-chart-wrap {
+    position: relative;
+    width: 280px;
+    height: 220px;
+    margin: 0 auto;
+}
+
+.channel-donut {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 148px;
+    height: 148px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: conic-gradient(
+        #1a3a6b 0% 16.63%,
+        #17b8b0 16.63% 32.71%,
+        #7c5cd0 32.71% 48.13%,
+        #e0508f 48.13% 63.09%,
+        #f2795a 63.09% 77.75%,
+        #4fc3f7 77.75% 92.23%,
+        #4ade80 92.23% 100%
+    );
+}
+
+.channel-hole {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background: #ffffff;
+    transform: translate(-50%, -50%);
+}
+
+.channel-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.channel-lines line {
+    stroke: #c3c9d4;
+    stroke-width: 1.2;
+}
+
+.channel-label {
+    position: absolute;
+    font-size: 14px;
+    font-weight: 600;
+    color: #6b7280;
+    white-space: nowrap;
+}
+
+.channel-label b {
+    font-weight: 800;
+    color: #374151;
+}
+
+.label-linkedin {
+    top: 23px;
+    left: 187px;
+}
+
+.label-bing {
+    top: 101px;
+    left: 234px;
+}
+
+.label-snapchat {
+    top: 181px;
+    left: 190px;
+}
+
+.label-facebook {
+    top: 192px;
+    right: 172px;
+    text-align: right;
+}
+
+.label-tiktok {
+    top: 130px;
+    right: 230px;
+    text-align: right;
+}
+
+.label-twitter {
+    top: 48px;
+    right: 216px;
+    text-align: right;
+}
+
+.label-google {
+    top: 12px;
+    right: 163px;
+    text-align: right;
+}
+
+/* Weekly ad spend */
+.chart-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.spend-card .chart-card-title {
+    font-size: 19px;
+    font-weight: 800;
+}
+
+.chevron-next {
+    width: 16px;
+    height: 16px;
+    color: #9aa2b8;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.legend-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.legend-dot-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #4b5563;
+}
+
+.legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.legend-dot-bing {
+    background: #2f6fd6;
+}
+
+.legend-dot-googleads {
+    background: #4fc3f7;
+}
+
+.legend-dot-linkedinads {
+    background: #7c5cd0;
+}
+
+.legend-dot-metaads {
+    background: #22c55e;
+}
+
+.spend-chart {
+    position: relative;
+    height: 130px;
+    margin-bottom: 6px;
+}
+
+.spend-gridlines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 30px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #9aa2b8;
+}
+
+.spend-gridlines span {
+    position: absolute;
+    left: 0;
+    transform: translateY(-50%);
+}
+
+.spend-gridlines span:nth-child(1) {
+    top: 0;
+}
+
+.spend-gridlines span:nth-child(2) {
+    top: 50%;
+}
+
+.spend-gridlines span:nth-child(3) {
+    top: 100%;
+}
+
+.spend-bars {
+    position: absolute;
+    top: 0;
+    left: 34px;
+    right: 0;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+.spend-bar-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: flex-end;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.spend-bar {
+    width: 100%;
+}
+
+.bar-bing {
+    background: #2f6fd6;
+}
+
+.bar-googleads {
+    background: #4fc3f7;
+}
+
+.bar-linkedinads {
+    background: #7c5cd0;
+}
+
+.bar-metaads {
+    background: #22c55e;
+}
+
+.spend-months {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 34px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #9aa2b8;
+}
+
 /* ===== SIDEBAR COLUMN ===== */
 .sidebar-column {
     width: 260px;
