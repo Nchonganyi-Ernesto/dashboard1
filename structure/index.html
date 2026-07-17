@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-content">
+                <!-- Logo Section -->
+                <div class="sidebar-logo">
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 3H5a2 2 0 0 0-2 2v4m0 0H3m2 0v14a2 2 0 0 0 2 2h4m0 0h4a2 2 0 0 0 2-2v-4m0 0h2m-2 0V5a2 2 0 0 0-2-2h-4"></path>
+                        <circle cx="18" cy="9" r="1.5"></circle>
+                        <circle cx="18" cy="15" r="1.5"></circle>
+                    </svg>
+                    <div class="logo-text">
+                        <div class="logo-title">PROJECT</div>
+                        <div class="logo-subtitle">MANAGEMENT</div>
+                        <div class="logo-subtitle">DASHBOARD</div>
+                    </div>
+                </div>
+
+                <!-- Navigation Menu -->
+                <nav class="sidebar-nav">
+                    <a href="#" class="nav-item active">
+                        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <span>Visitors & Buyers</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="12 2 15.09 10.26 24 12.75 17.77 18.88 20.16 27.75 12 23.77 3.84 27.75 6.23 18.88 0 12.75 8.91 10.26 12 2"></polygon>
+                        </svg>
+                        <span>Sales Funnel</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                        </svg>
+                        <span>Roadmap</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 5v14M5 12h14"></path>
+                        </svg>
+                        <span>Sales Volume</span>
+                    </a>
+                </nav>
+
+                <!-- Year Filter -->
+                <div class="sidebar-filter">
+                    <div class="filter-group">
+                        <button class="filter-btn">2025</button>
+                        <button class="filter-btn">2026</button>
+                        <button class="filter-btn active">2027</button>
+                        <button class="filter-btn">2028</button>
+                    </div>
+                </div>
+
+                <!-- Month Filter -->
+                <div class="sidebar-filter">
+                    <div class="filter-group">
+                        <button class="filter-btn">JAN</button>
+                        <button class="filter-btn">FEB</button>
+                        <button class="filter-btn">MAR</button>
+                    </div>
+                    <div class="filter-group">
+                        <button class="filter-btn">APR</button>
+                        <button class="filter-btn active">MAY</button>
+                        <button class="filter-btn">JUN</button>
+                    </div>
+                    <div class="filter-group">
+                        <button class="filter-btn">JUL</button>
+                        <button class="filter-btn active">AUG</button>
+                        <button class="filter-btn">SEP</button>
+                    </div>
+                    <div class="filter-group">
+                        <button class="filter-btn">OCT</button>
+                        <button class="filter-btn">NOV</button>
+                        <button class="filter-btn">DEC</button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Cards Section -->
+            <section class="cards-section">
+                <div class="card card-1">
+                    <div class="card-content">
+                        <div class="card-title">Visitors & Buyers</div>
+                    </div>
+                    <div class="card-number">59 156</div>
+                    <svg class="card-wave" viewBox="0 0 400 100" preserveAspectRatio="none">
+                        <path d="M0,50 Q100,30 200,50 T400,50" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+                    </svg>
+                </div>
+
+                <div class="card card-2">
+                    <div class="card-content">
+                        <div class="card-title">Sales Funnel</div>
+                    </div>
+                    <div class="funnel-row">
+                        <svg class="card-funnel-icon" viewBox="0 0 24 24" fill="rgba(0,0,0,0.3)">
+                            <polygon points="2,3 22,3 15,13 15,22 9,22 9,13"></polygon>
+                        </svg>
+                        <div class="card-number card-number-inline">26%</div>
+                    </div>
+                    <div class="card-stat-row">
+                        <div class="card-stat-label">
+                            <svg class="stat-icon" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="9" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="3"></circle>
+                                <circle cx="12" cy="12" r="9" fill="none" stroke="#ffffff" stroke-width="3" stroke-dasharray="27 100" transform="rotate(-90 12 12)"></circle>
+                            </svg>
+                            <span class="card-subtitle">Buyers</span>
+                        </div>
+                        <span class="card-metric">48%</span>
+                    </div>
+                </div>
+
+                <div class="card card-3">
+                    <svg class="card-loop-icon" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2">
+                        <polyline points="23 4 23 10 17 10"></polyline>
+                        <polyline points="1 20 1 14 7 14"></polyline>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                    </svg>
+                    <div class="card-content">
+                        <div class="card-title">Roadmap</div>
+                        <div class="card-month">November</div>
+                    </div>
+                    <div class="card-tags">
+                        <span class="card-tag">Tasks</span>
+                        <span class="card-tag">Adapt</span>
+                    </div>
+                </div>
+
+                <div class="card card-4">
+                    <div class="card-content">
+                        <div class="card-title">Sales Volume</div>
+                    </div>
+                    <div class="card-number">$562,570</div>
+                    <svg class="card-bars" viewBox="0 0 400 100" preserveAspectRatio="none">
+                        <rect x="10" y="75" width="24" height="25"></rect>
+                        <rect x="46" y="65" width="24" height="35"></rect>
+                        <rect x="82" y="55" width="24" height="45"></rect>
+                        <rect x="118" y="68" width="24" height="32"></rect>
+                        <rect x="154" y="45" width="24" height="55"></rect>
+                        <rect x="190" y="58" width="24" height="42"></rect>
+                        <rect x="226" y="35" width="24" height="65"></rect>
+                        <rect x="262" y="50" width="24" height="50"></rect>
+                        <rect x="298" y="25" width="24" height="75"></rect>
+                        <rect x="334" y="40" width="24" height="60"></rect>
+                        <rect x="370" y="20" width="24" height="80"></rect>
+                    </svg>
+                </div>            </section>
+
+            <!-- Charts Section -->
+            <section class="charts-section">
+                <div class="chart-panel chart-panel-large">
+                    <div class="chart-panel-header">
+                        <div class="chart-panel-title">Visitors & Buyers</div>
+                        <div class="chart-legend">
+                            <div class="legend-item">
+                                <span class="legend-dot legend-dot-visitors"></span>
+                                <span class="legend-label">Visitors</span>
+                                <span class="legend-value">59 156</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-dot legend-dot-buyers"></span>
+                                <span class="legend-label">Buyers</span>
+                                <span class="legend-value">28 287</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-dot legend-dot-returning"></span>
+                                <span class="legend-label">Returning</span>
+                                <span class="legend-value">11 073</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bar-line-chart">
+                        <svg class="chart-line" viewBox="0 0 480 160" preserveAspectRatio="none">
+                            <polyline points="20,95 60,60 100,80 140,45 180,35 220,65 260,40 300,55 340,50 380,70 420,58 460,68" fill="none" stroke="#f2795a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                            <circle cx="20" cy="95" r="3.5" fill="#f2795a"></circle>
+                            <circle cx="60" cy="60" r="3.5" fill="#f2795a"></circle>
+                            <circle cx="100" cy="80" r="3.5" fill="#f2795a"></circle>
+                            <circle cx="140" cy="45" r="3.5" fill="#f2795a"></circle>
+                            <circle cx="180" cy="35" r="3.5" fill="#f2795a"></circle>
+                            <circle cx="220" cy="65" r="3.5" fill="#f2795a"></circle>
+                            <circle cx="260" cy="40" r="3.5" fill="#f2795a"></circle>
+                            <circle cx="300" cy="55" r="3.5" fill="#f2795a"></circle>
+                            <circle cx="340" cy="50" r="3.5" fill="#f2795a"></circle>
+                            <circle cx="380" cy="70" r="3.5" fill="#f2795a"></circle>
+                            <circle cx="420" cy="58" r="3.5" fill="#f2795a"></circle>
+                            <circle cx="460" cy="68" r="3.5" fill="#f2795a"></circle>
+                        </svg>
+                        <div class="bars">
+                            <div class="bar-group"><div class="bar-segment bar-segment-top" style="height:12%"></div><div class="bar-segment bar-segment-bottom" style="height:18%"></div></div>
+                            <div class="bar-group"><div class="bar-segment bar-segment-top" style="height:14%"></div><div class="bar-segment bar-segment-bottom" style="height:20%"></div></div>
+                            <div class="bar-group"><div class="bar-segment bar-segment-top" style="height:18%"></div><div class="bar-segment bar-segment-bottom" style="height:26%"></div></div>
+                            <div class="bar-group"><div class="bar-segment bar-segment-top" style="height:22%"></div><div class="bar-segment bar-segment-bottom" style="height:34%"></div></div>
+                            <div class="bar-group"><div class="bar-segment bar-segment-top" style="height:28%"></div><div class="bar-segment bar-segment-bottom" style="height:42%"></div></div>
+                            <div class="bar-group"><div class="bar-segment bar-segment-top" style="height:32%"></div><div class="bar-segment bar-segment-bottom" style="height:48%"></div></div>
+                            <div class="bar-group"><div class="bar-segment bar-segment-top" style="height:34%"></div><div class="bar-segment bar-segment-bottom" style="height:52%"></div></div>
+                            <div class="bar-group"><div class="bar-segment bar-segment-top" style="height:36%"></div><div class="bar-segment bar-segment-bottom" style="height:55%"></div></div>
+                            <div class="bar-group"><div class="bar-segment bar-segment-top" style="height:33%"></div><div class="bar-segment bar-segment-bottom" style="height:50%"></div></div>
+                            <div class="bar-group"><div class="bar-segment bar-segment-top" style="height:35%"></div><div class="bar-segment bar-segment-bottom" style="height:53%"></div></div>
+                            <div class="bar-group"><div class="bar-segment bar-segment-top" style="height:30%"></div><div class="bar-segment bar-segment-bottom" style="height:45%"></div></div>
+                            <div class="bar-group"><div class="bar-segment bar-segment-top" style="height:24%"></div><div class="bar-segment bar-segment-bottom" style="height:36%"></div></div>
+                        </div>
+                    </div>
+                    <div class="chart-months">
+                        <span>JAN</span>
+                        <span>FEB</span>
+                        <span>MAR</span>
+                        <span>APR</span>
+                        <span class="month-active">MAY</span>
+                        <span>JUN</span>
+                        <span>JUL</span>
+                        <span class="month-active">AUG</span>
+                        <span>SEP</span>
+                        <span class="month-active">OCT</span>
+                        <span>NOV</span>
+                        <span>DEC</span>
+                    </div>
+                </div>
+
+                <div class="chart-panel chart-panel-small">
+                    <div class="chart-panel-header">
+                        <div class="chart-panel-title">Conversion</div>
+                        <div class="legend-item legend-item-inline">
+                            <span class="legend-dot legend-dot-new"></span>
+                            <span class="legend-label">New</span>
+                            <span class="legend-value">19%</span>
+                        </div>
+                    </div>
+                    <div class="donut-wrap">
+                        <div class="donut-chart">
+                            <div class="donut-hole">
+                                <span class="donut-label">Buyers</span>
+                                <span class="donut-value">48%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Managers & Sales Volume Section -->
+            <section class="managers-section">
+                <div class="chart-panel managers-panel">
+                    <div class="managers-header-row">
+                        <span class="chart-panel-title">Top-3 Sales Managers</span>
+                        <span class="header-kpi">KPI Plan</span>
+                        <span class="header-volume">Sales Volume</span>
+                    </div>
+
+                    <div class="manager-row manager-row-1">
+                        <span class="manager-rank">Top 1</span>
+                        <span class="manager-avatar avatar-1">
+                            <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Sophia Reynolds">
+                        </span>
+                        <span class="manager-name">Sophia Reynolds</span>
+                        <span class="manager-kpi">42%</span>
+                        <span class="manager-volume">$145,811</span>
+                    </div>
+
+                    <div class="manager-row manager-row-2">
+                        <span class="manager-rank">Top 2</span>
+                        <span class="manager-avatar avatar-2">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Ethan Parker">
+                        </span>
+                        <span class="manager-name">Ethan Parker</span>
+                        <span class="manager-kpi">31%</span>
+                        <span class="manager-volume">$109,977</span>
+                    </div>
+
+                    <div class="manager-row manager-row-3">
+                        <span class="manager-rank">Top 3</span>
+                        <span class="manager-avatar avatar-3">
+                            <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Lucas Bennett">
+                        </span>
+                        <span class="manager-name">Lucas Bennett</span>
+                        <span class="manager-kpi">30%</span>
+                        <span class="manager-volume">$106,469</span>
+                    </div>
+                </div>
+
+                <div class="chart-panel sales-volume-panel">
+                    <div class="chart-panel-header">
+                        <div class="chart-panel-title">Sales Volume</div>
+                        <div class="chart-legend">
+                            <div class="legend-item">
+                                <span class="legend-dot legend-dot-sales"></span>
+                                <span class="legend-label">Sales</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-dot legend-dot-purchases"></span>
+                                <span class="legend-label">Purchases</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sv-totals">
+                        <span class="sv-total sv-total-sales">$562.6K</span>
+                        <span class="sv-total sv-total-purchases">$536.5K</span>
+                    </div>
+
+                    <div class="sv-chart">
+                        <div class="sv-gridlines">
+                            <span>200 K</span>
+                            <span>100 K</span>
+                        </div>
+                        <div class="sv-bars">
+                            <div class="sv-bar-group"><div class="sv-bar sv-bar-sales" style="height:34%"></div><div class="sv-bar sv-bar-purchases" style="height:28%"></div></div>
+                            <div class="sv-bar-group"><div class="sv-bar sv-bar-sales" style="height:40%"></div><div class="sv-bar sv-bar-purchases" style="height:36%"></div></div>
+                            <div class="sv-bar-group"><div class="sv-bar sv-bar-sales" style="height:48%"></div><div class="sv-bar sv-bar-purchases" style="height:44%"></div></div>
+                            <div class="sv-bar-group"><div class="sv-bar sv-bar-sales" style="height:55%"></div><div class="sv-bar sv-bar-purchases" style="height:50%"></div></div>
+                            <div class="sv-bar-group"><div class="sv-bar sv-bar-sales" style="height:62%"></div><div class="sv-bar sv-bar-purchases" style="height:58%"></div></div>
+                            <div class="sv-bar-group"><div class="sv-bar sv-bar-sales" style="height:70%"></div><div class="sv-bar sv-bar-purchases" style="height:64%"></div></div>
+                            <div class="sv-bar-group"><div class="sv-bar sv-bar-sales" style="height:78%"></div><div class="sv-bar sv-bar-purchases" style="height:70%"></div></div>
+                            <div class="sv-bar-group"><div class="sv-bar sv-bar-sales" style="height:85%"></div><div class="sv-bar sv-bar-purchases" style="height:76%"></div></div>
+                            <div class="sv-bar-group"><div class="sv-bar sv-bar-sales" style="height:76%"></div><div class="sv-bar sv-bar-purchases" style="height:68%"></div></div>
+                            <div class="sv-bar-group"><div class="sv-bar sv-bar-sales" style="height:82%"></div><div class="sv-bar sv-bar-purchases" style="height:72%"></div></div>
+                            <div class="sv-bar-group"><div class="sv-bar sv-bar-sales" style="height:68%"></div><div class="sv-bar sv-bar-purchases" style="height:60%"></div></div>
+                            <div class="sv-bar-group"><div class="sv-bar sv-bar-sales" style="height:56%"></div><div class="sv-bar sv-bar-purchases" style="height:48%"></div></div>
+                        </div>
+                    </div>
+                    <div class="chart-months sv-months">
+                        <span>JAN</span>
+                        <span>FEB</span>
+                        <span>MAR</span>
+                        <span>APR</span>
+                        <span>MAY</span>
+                        <span>JUN</span>
+                        <span>JUL</span>
+                        <span>AUG</span>
+                        <span>SEP</span>
+                        <span>OCT</span>
+                        <span>NOV</span>
+                        <span>DEC</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Content will go here -->
+        </main>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+</html>
