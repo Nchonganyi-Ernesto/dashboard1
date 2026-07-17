@@ -602,6 +602,10 @@ body {
     grid-column: 1 / 4;
 }
 
+.label-short {
+    display: none;
+}
+
 .header-kpi {
     grid-column: 4;
     font-size: 12px;
@@ -923,7 +927,7 @@ body.no-scroll {
     }
 
     .main-content {
-        padding: 90px 24px 30px;
+        padding: 100px 24px 30px;
         width: 100%;
     }
 
@@ -951,11 +955,20 @@ body.no-scroll {
 
     .managers-header-row,
     .manager-row {
-        grid-template-columns: 44px 36px 1fr 70px 90px;
+        grid-template-columns: 38px 34px 1fr 58px 96px;
+        gap: 6px;
+    }
+
+    .manager-avatar {
+        width: 32px;
+        height: 32px;
     }
 
     .manager-name {
         font-size: 13px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .header-kpi,
@@ -963,9 +976,20 @@ body.no-scroll {
         padding-right: 0;
     }
 
+    .header-kpi,
+    .header-volume {
+        font-size: 11px;
+        white-space: nowrap;
+    }
+
     .header-volume,
     .manager-volume {
-        padding-right: 8px;
+        padding-right: 0;
+    }
+
+    .manager-volume {
+        font-size: 13px;
+        white-space: nowrap;
     }
 }
 
@@ -976,11 +1000,15 @@ body.no-scroll {
     }
 
     .main-content {
-        padding: 84px 14px 20px;
+        padding: 84px 10px 20px;
     }
 
     .main-panel {
-        padding: 18px;
+        padding: 14px;
+    }
+
+    .chart-panel {
+        padding: 16px;
     }
 
     .chart-legend {
@@ -988,16 +1016,59 @@ body.no-scroll {
         flex-wrap: wrap;
     }
 
-    .managers-header-row,
-    .manager-row {
-        grid-template-columns: 36px 32px 1fr 56px 74px;
-        gap: 2px;
+    .label-full {
+        display: none;
     }
 
-    .manager-name,
+    .label-short {
+        display: inline;
+    }
+
+    .managers-header-row,
+    .manager-row {
+        grid-template-columns: 28px 30px 1fr 40px 62px;
+        gap: 6px;
+        align-items: center;
+    }
+
+    .manager-row {
+        align-items: flex-start;
+        padding-top: 20px;
+    }
+
+    .managers-header-row .chart-panel-title {
+        font-size: 14px;
+    }
+
+    .header-kpi,
+    .header-volume {
+        font-size: 11px;
+        white-space: nowrap;
+    }
+
+    .manager-rank {
+        font-size: 11px;
+        padding-top: 6px;
+    }
+
+    .manager-avatar {
+        width: 30px;
+        height: 30px;
+    }
+
+    .manager-name {
+        font-size: 12px;
+        white-space: normal;
+        word-break: break-word;
+        line-height: 1.3;
+        padding-top: 4px;
+    }
+
     .manager-kpi,
     .manager-volume {
         font-size: 12px;
+        white-space: nowrap;
+        padding-top: 6px;
     }
 
     .sv-totals {
@@ -1006,5 +1077,72 @@ body.no-scroll {
 
     .sv-total {
         font-size: 16px;
+    }
+}
+
+/* iPhone SE / very small phones */
+@media (max-width: 400px) {
+    .main-content {
+        padding: 80px 6px 16px;
+    }
+
+    .main-panel {
+        padding: 10px;
+    }
+
+    .chart-panel {
+        padding: 12px;
+    }
+
+    .managers-header-row .chart-panel-title {
+        font-size: 13px;
+    }
+
+    .managers-header-row,
+    .manager-row {
+        grid-template-columns: 24px 26px 1fr 36px 54px;
+        gap: 4px;
+    }
+
+    .header-kpi,
+    .header-volume {
+        font-size: 10px;
+    }
+
+    .manager-rank {
+        font-size: 10px;
+    }
+
+    .manager-avatar {
+        width: 26px;
+        height: 26px;
+        padding: 1px;
+    }
+
+    .manager-name {
+        font-size: 11px;
+    }
+
+    .manager-kpi,
+    .manager-volume {
+        font-size: 11px;
+    }
+
+    .sv-total {
+        font-size: 14px;
+    }
+
+    .sv-totals {
+        gap: 10px;
+    }
+
+    .donut-chart {
+        width: 120px;
+        height: 120px;
+    }
+
+    .donut-hole {
+        width: 70px;
+        height: 70px;
     }
 }
