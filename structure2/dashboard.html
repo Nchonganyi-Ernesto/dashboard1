@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
     <header class="header">
@@ -87,25 +87,10 @@
             <div class="analytics-row">
                 <div class="chart-card channel-card">
                     <div class="chart-card-title">Traffic by channel</div>
-                    <div class="channel-chart-wrap">
-                        <div class="channel-donut"></div>
+                    <div class="channel-chart-wrap" id="channel-chart-wrap">
+                        <div class="channel-donut" id="channel-donut"></div>
                         <div class="channel-hole"></div>
-                        <svg class="channel-lines" viewBox="0 0 280 220">
-                            <line x1="177" y1="45.9" x2="187" y2="28.6"></line>
-                            <line x1="214" y1="108.45" x2="234" y2="108.03"></line>
-                            <line x1="181.9" y1="171.0" x2="193.2" y2="187.5"></line>
-                            <line x1="114.5" y1="179.4" x2="107.6" y2="198.2"></line>
-                            <line x1="69.05" y1="131.0" x2="49.87" y2="136.67"></line>
-                            <line x1="80.13" y1="66.5" x2="63.95" y2="54.75"></line>
-                            <line x1="122.1" y1="38.2" x2="117.26" y2="18.8"></line>
-                        </svg>
-                        <div class="channel-label label-linkedin">linkedin <b>16.63%</b></div>
-                        <div class="channel-label label-bing">bing ads <b>16.08%</b></div>
-                        <div class="channel-label label-snapchat">snapchat ads <b>15.42%</b></div>
-                        <div class="channel-label label-facebook">facebook <b>14.96%</b></div>
-                        <div class="channel-label label-tiktok">titktok <b>14.66%</b></div>
-                        <div class="channel-label label-twitter">twitter ads <b>14.48%</b></div>
-                        <div class="channel-label label-google">google ads <b>7.76%</b></div>
+                        <svg class="channel-lines" id="channel-lines" viewBox="0 0 280 220"></svg>
                     </div>
                 </div>
 
@@ -116,181 +101,24 @@
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
                     </div>
-                    <div class="legend-row">
-                        <span class="legend-dot-item"><span class="legend-dot legend-dot-bing"></span>Bing ads</span>
-                        <span class="legend-dot-item"><span class="legend-dot legend-dot-googleads"></span>Google ads</span>
-                        <span class="legend-dot-item"><span class="legend-dot legend-dot-linkedinads"></span>Linkedin ads</span>
-                        <span class="legend-dot-item"><span class="legend-dot legend-dot-metaads"></span>Meta ads</span>
-                    </div>
+                    <div class="legend-row" id="spend-legend"></div>
                     <div class="spend-chart">
-                        <div class="spend-gridlines">
-                            <span>200</span>
-                            <span>100</span>
-                            <span>0</span>
-                        </div>
-                        <div class="spend-bars">
-                            <div class="spend-bar-group">
-                                <div class="spend-bar bar-bing" style="height:16%"></div>
-                                <div class="spend-bar bar-googleads" style="height:14%"></div>
-                                <div class="spend-bar bar-linkedinads" style="height:12%"></div>
-                                <div class="spend-bar bar-metaads" style="height:10%"></div>
-                            </div>
-                            <div class="spend-bar-group">
-                                <div class="spend-bar bar-bing" style="height:20%"></div>
-                                <div class="spend-bar bar-googleads" style="height:16%"></div>
-                                <div class="spend-bar bar-linkedinads" style="height:14%"></div>
-                                <div class="spend-bar bar-metaads" style="height:12%"></div>
-                            </div>
-                            <div class="spend-bar-group">
-                                <div class="spend-bar bar-bing" style="height:22%"></div>
-                                <div class="spend-bar bar-googleads" style="height:18%"></div>
-                                <div class="spend-bar bar-linkedinads" style="height:15%"></div>
-                                <div class="spend-bar bar-metaads" style="height:13%"></div>
-                            </div>
-                            <div class="spend-bar-group">
-                                <div class="spend-bar bar-bing" style="height:24%"></div>
-                                <div class="spend-bar bar-googleads" style="height:19%"></div>
-                                <div class="spend-bar bar-linkedinads" style="height:16%"></div>
-                                <div class="spend-bar bar-metaads" style="height:14%"></div>
-                            </div>
-                            <div class="spend-bar-group">
-                                <div class="spend-bar bar-bing" style="height:23%"></div>
-                                <div class="spend-bar bar-googleads" style="height:18%"></div>
-                                <div class="spend-bar bar-linkedinads" style="height:15%"></div>
-                                <div class="spend-bar bar-metaads" style="height:13%"></div>
-                            </div>
-                            <div class="spend-bar-group">
-                                <div class="spend-bar bar-bing" style="height:21%"></div>
-                                <div class="spend-bar bar-googleads" style="height:17%"></div>
-                                <div class="spend-bar bar-linkedinads" style="height:14%"></div>
-                                <div class="spend-bar bar-metaads" style="height:12%"></div>
-                            </div>
-                            <div class="spend-bar-group">
-                                <div class="spend-bar bar-bing" style="height:19%"></div>
-                                <div class="spend-bar bar-googleads" style="height:15%"></div>
-                                <div class="spend-bar bar-linkedinads" style="height:13%"></div>
-                                <div class="spend-bar bar-metaads" style="height:11%"></div>
-                            </div>
-                            <div class="spend-bar-group">
-                                <div class="spend-bar bar-bing" style="height:14%"></div>
-                                <div class="spend-bar bar-googleads" style="height:11%"></div>
-                                <div class="spend-bar bar-linkedinads" style="height:9%"></div>
-                                <div class="spend-bar bar-metaads" style="height:8%"></div>
-                            </div>
-                            <div class="spend-bar-group">
-                                <div class="spend-bar bar-bing" style="height:6%"></div>
-                                <div class="spend-bar bar-googleads" style="height:5%"></div>
-                                <div class="spend-bar bar-linkedinads" style="height:4%"></div>
-                                <div class="spend-bar bar-metaads" style="height:3%"></div>
-                            </div>
-                        </div>
+                        <div class="spend-gridlines" id="spend-gridlines"></div>
+                        <div class="spend-bars" id="spend-bars"></div>
                     </div>
-                    <div class="spend-months">
-                        <span>Apr 2025</span>
-                        <span>May 2025</span>
-                    </div>
+                    <div class="spend-months" id="spend-months"></div>
                 </div>
 
                 <div class="chart-card cpc-card">
                     <div class="chart-card-header">
                         <div class="chart-card-title">Weekly CPC</div>
                     </div>
-                    <div class="legend-row">
-                        <span class="legend-dot-item"><span class="legend-dot legend-dot-bing"></span>Bing ads</span>
-                        <span class="legend-dot-item"><span class="legend-dot legend-dot-googleads"></span>Google ads</span>
-                        <span class="legend-dot-item"><span class="legend-dot legend-dot-linkedinads"></span>Linkedin ads</span>
-                        <span class="legend-dot-item"><span class="legend-dot legend-dot-metaads"></span>Meta ads</span>
-                    </div>
+                    <div class="legend-row" id="cpc-legend"></div>
                     <div class="cpc-chart">
-                        <div class="cpc-gridlines">
-                            <span>0.5</span>
-                            <span>0.0</span>
-                        </div>
-                        <div class="cpc-bars">
-                            <div class="cpc-bar-group">
-                                <div class="cpc-bar bar-bing" style="height:55%"></div>
-                                <div class="cpc-bar bar-googleads" style="height:32%"></div>
-                                <div class="cpc-bar bar-linkedinads" style="height:68%"></div>
-                                <div class="cpc-bar bar-metaads" style="height:44%"></div>
-                            </div>
-                            <div class="cpc-bar-group">
-                                <div class="cpc-bar bar-bing" style="height:38%"></div>
-                                <div class="cpc-bar bar-googleads" style="height:60%"></div>
-                                <div class="cpc-bar bar-linkedinads" style="height:45%"></div>
-                                <div class="cpc-bar bar-metaads" style="height:70%"></div>
-                            </div>
-                            <div class="cpc-bar-group">
-                                <div class="cpc-bar bar-bing" style="height:62%"></div>
-                                <div class="cpc-bar bar-googleads" style="height:40%"></div>
-                                <div class="cpc-bar bar-linkedinads" style="height:30%"></div>
-                                <div class="cpc-bar bar-metaads" style="height:55%"></div>
-                            </div>
-                            <div class="cpc-bar-group">
-                                <div class="cpc-bar bar-bing" style="height:45%"></div>
-                                <div class="cpc-bar bar-googleads" style="height:75%"></div>
-                                <div class="cpc-bar bar-linkedinads" style="height:50%"></div>
-                                <div class="cpc-bar bar-metaads" style="height:35%"></div>
-                            </div>
-                            <div class="cpc-bar-group">
-                                <div class="cpc-bar bar-bing" style="height:70%"></div>
-                                <div class="cpc-bar bar-googleads" style="height:48%"></div>
-                                <div class="cpc-bar bar-linkedinads" style="height:60%"></div>
-                                <div class="cpc-bar bar-metaads" style="height:40%"></div>
-                            </div>
-                            <div class="cpc-bar-group">
-                                <div class="cpc-bar bar-bing" style="height:33%"></div>
-                                <div class="cpc-bar bar-googleads" style="height:52%"></div>
-                                <div class="cpc-bar bar-linkedinads" style="height:42%"></div>
-                                <div class="cpc-bar bar-metaads" style="height:65%"></div>
-                            </div>
-                            <div class="cpc-bar-group">
-                                <div class="cpc-bar bar-bing" style="height:58%"></div>
-                                <div class="cpc-bar bar-googleads" style="height:36%"></div>
-                                <div class="cpc-bar bar-linkedinads" style="height:72%"></div>
-                                <div class="cpc-bar bar-metaads" style="height:48%"></div>
-                            </div>
-                            <div class="cpc-bar-group">
-                                <div class="cpc-bar bar-bing" style="height:41%"></div>
-                                <div class="cpc-bar bar-googleads" style="height:64%"></div>
-                                <div class="cpc-bar bar-linkedinads" style="height:38%"></div>
-                                <div class="cpc-bar bar-metaads" style="height:56%"></div>
-                            </div>
-                            <div class="cpc-bar-group">
-                                <div class="cpc-bar bar-bing" style="height:66%"></div>
-                                <div class="cpc-bar bar-googleads" style="height:44%"></div>
-                                <div class="cpc-bar bar-linkedinads" style="height:53%"></div>
-                                <div class="cpc-bar bar-metaads" style="height:30%"></div>
-                            </div>
-                            <div class="cpc-bar-group">
-                                <div class="cpc-bar bar-bing" style="height:36%"></div>
-                                <div class="cpc-bar bar-googleads" style="height:58%"></div>
-                                <div class="cpc-bar bar-linkedinads" style="height:47%"></div>
-                                <div class="cpc-bar bar-metaads" style="height:68%"></div>
-                            </div>
-                            <div class="cpc-bar-group">
-                                <div class="cpc-bar bar-bing" style="height:73%"></div>
-                                <div class="cpc-bar bar-googleads" style="height:50%"></div>
-                                <div class="cpc-bar bar-linkedinads" style="height:34%"></div>
-                                <div class="cpc-bar bar-metaads" style="height:62%"></div>
-                            </div>
-                            <div class="cpc-bar-group">
-                                <div class="cpc-bar bar-bing" style="height:48%"></div>
-                                <div class="cpc-bar bar-googleads" style="height:70%"></div>
-                                <div class="cpc-bar bar-linkedinads" style="height:56%"></div>
-                                <div class="cpc-bar bar-metaads" style="height:38%"></div>
-                            </div>
-                            <div class="cpc-bar-group">
-                                <div class="cpc-bar bar-bing" style="height:54%"></div>
-                                <div class="cpc-bar bar-googleads" style="height:34%"></div>
-                                <div class="cpc-bar bar-linkedinads" style="height:64%"></div>
-                                <div class="cpc-bar bar-metaads" style="height:45%"></div>
-                            </div>
-                        </div>
+                        <div class="cpc-gridlines" id="cpc-gridlines"></div>
+                        <div class="cpc-bars" id="cpc-bars"></div>
                     </div>
-                    <div class="cpc-months">
-                        <span>Apr 2025</span>
-                        <span>May 2025</span>
-                    </div>
+                    <div class="cpc-months" id="cpc-months"></div>
                 </div>
             </div>
 
@@ -561,6 +389,6 @@
         <span>Connect 70+ data sources with Coupler.io</span>
     </footer>
 
-    <script src="index.js"></script>
+    <script src="dashboard.js"></script>
 </body>
 </html>

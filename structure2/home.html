@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Engine UI</title>
+    
+    <!-- FontAwesome for the icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts: Space Grotesk -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="home.css">
+    
+</head>
+<body>
+     <!-- Full Width Top Navigation -->
+    <nav class="top-nav">
+        <div class="brand">
+            <i class="fa-solid fa-circle-nodes"></i>
+            <span>ksearch</span>
+        </div>
+        
+        <!-- Hamburger Icon -->
+        <button class="hamburger" id="hamburgerMenu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <!-- Sliding Auth Menu -->
+        <div class="auth-menu" id="authDropMenu">
+            <div class="auth-buttons">
+                <button class="sign-in-btn">Sign In</button>
+                <button class="sign-up-btn">Sign Up</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <div class="app-container">
+        
+        <!-- Hero Section -->
+        <header class="hero">
+            <h1>Search with Clarity</h1>
+            <p>Access analytical precision and real-time insights powered by AI.</p>
+        </header>
+
+        <!-- Search Bar -->
+        <div class="search-container">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Explore your next big idea...">
+            <button class="search-btn">Search</button>
+        </div>
+
+        <!-- Section Header -->
+        <div class="section-header">
+            <h2>Trending Insights</h2>
+            <i class="fa-solid fa-arrow-trend-up"></i>
+        </div>
+
+        <!-- Insights Grid -->
+        <div class="insights-grid">
+            <!-- Card 1 -->
+            <div class="card">
+                <div class="card-top">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span class="badge-live">Live</span>
+                </div>
+                <h3>Global Market<br>Shifts 2024</h3>
+            </div>
+            
+            <!-- Card 2 -->
+            <div class="card">
+                <div class="card-top">
+                    <i class="fa-solid fa-flask"></i>
+                </div>
+                <h3>Next-Gen<br>Quantum AI</h3>
+            </div>
+        </div>
+
+        <!-- Personalized Feed Card -->
+        <div class="card feed-card">
+            <div class="feed-icon">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
+            <div class="feed-text">
+                <h3>Personalized Feed</h3>
+                <p>Based on your recent interests</p>
+            </div>
+            <i class="fa-solid fa-chevron-right"></i>
+        </div>
+
+        <!-- Filter Tags -->
+        <div class="tags-container">
+            <span class="tag">REPORTS</span>
+            <span class="tag">TECH</span>
+            <span class="tag">FINANCE</span>
+            <span class="tag">DESIGN</span>
+        </div>
+        
+    </div>
+
+    <!-- Floating Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="#" class="bottom-nav-item active">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+        </a>
+        <a href="#" class="bottom-nav-item">
+            <i class="fa-solid fa-bullhorn"></i>
+            <span>Apply for Ads</span>
+        </a>
+        <a href="#" class="bottom-nav-item">
+            <i class="fa-solid fa-rss"></i>
+            <span>Feeds</span>
+        </a>
+    </nav>
+
+</body>
+<script src="home.js"></script>
+</html>

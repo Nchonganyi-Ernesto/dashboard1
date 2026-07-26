@@ -486,6 +486,14 @@ body {
     padding: 0 4px;
 }
 
+.vb-bar {
+    position: absolute;
+    bottom: 0;
+    width: 12px;
+    border-radius: 10px 10px 0 0;
+    background: #14b8a6;
+}
+
 .bar-group {
     flex: 1;
     display: flex;

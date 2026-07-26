@@ -189,66 +189,29 @@
                             <div class="legend-item">
                                 <span class="legend-dot legend-dot-visitors"></span>
                                 <span class="legend-label">Visitors</span>
-                                <span class="legend-value">59 156</span>
+                                <span class="legend-value" id="vb-legend-visitors"></span>
                             </div>
                             <div class="legend-item">
                                 <span class="legend-dot legend-dot-buyers"></span>
                                 <span class="legend-label">Buyers</span>
-                                <span class="legend-value">28 287</span>
+                                <span class="legend-value" id="vb-legend-buyers"></span>
                             </div>
                             <div class="legend-item">
                                 <span class="legend-dot legend-dot-returning"></span>
                                 <span class="legend-label">Returning</span>
-                                <span class="legend-value">11 073</span>
+                                <span class="legend-value" id="vb-legend-returning"></span>
                             </div>
                         </div>
                     </div>
 
                     <div class="bar-line-chart">
                         <svg class="chart-line" viewBox="0 0 480 160" preserveAspectRatio="none">
-                            <polyline points="20,95 60,60 100,80 140,45 180,35 220,65 260,40 300,55 340,50 380,70 420,58 460,68" fill="none" stroke="#f2795a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></polyline>
-                            <circle cx="20" cy="95" r="3.5" fill="#f2795a"></circle>
-                            <circle cx="60" cy="60" r="3.5" fill="#f2795a"></circle>
-                            <circle cx="100" cy="80" r="3.5" fill="#f2795a"></circle>
-                            <circle cx="140" cy="45" r="3.5" fill="#f2795a"></circle>
-                            <circle cx="180" cy="35" r="3.5" fill="#f2795a"></circle>
-                            <circle cx="220" cy="65" r="3.5" fill="#f2795a"></circle>
-                            <circle cx="260" cy="40" r="3.5" fill="#f2795a"></circle>
-                            <circle cx="300" cy="55" r="3.5" fill="#f2795a"></circle>
-                            <circle cx="340" cy="50" r="3.5" fill="#f2795a"></circle>
-                            <circle cx="380" cy="70" r="3.5" fill="#f2795a"></circle>
-                            <circle cx="420" cy="58" r="3.5" fill="#f2795a"></circle>
-                            <circle cx="460" cy="68" r="3.5" fill="#f2795a"></circle>
+                            <polyline id="vb-line" fill="none" stroke="#f2795a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                            <g id="vb-dots"></g>
                         </svg>
-                        <div class="bars">
-                            <div class="bar-group"><div class="bar-segment bar-segment-top" style="height:12%"></div><div class="bar-segment bar-segment-bottom" style="height:18%"></div></div>
-                            <div class="bar-group"><div class="bar-segment bar-segment-top" style="height:14%"></div><div class="bar-segment bar-segment-bottom" style="height:20%"></div></div>
-                            <div class="bar-group"><div class="bar-segment bar-segment-top" style="height:18%"></div><div class="bar-segment bar-segment-bottom" style="height:26%"></div></div>
-                            <div class="bar-group"><div class="bar-segment bar-segment-top" style="height:22%"></div><div class="bar-segment bar-segment-bottom" style="height:34%"></div></div>
-                            <div class="bar-group"><div class="bar-segment bar-segment-top" style="height:28%"></div><div class="bar-segment bar-segment-bottom" style="height:42%"></div></div>
-                            <div class="bar-group"><div class="bar-segment bar-segment-top" style="height:32%"></div><div class="bar-segment bar-segment-bottom" style="height:48%"></div></div>
-                            <div class="bar-group"><div class="bar-segment bar-segment-top" style="height:34%"></div><div class="bar-segment bar-segment-bottom" style="height:52%"></div></div>
-                            <div class="bar-group"><div class="bar-segment bar-segment-top" style="height:36%"></div><div class="bar-segment bar-segment-bottom" style="height:55%"></div></div>
-                            <div class="bar-group"><div class="bar-segment bar-segment-top" style="height:33%"></div><div class="bar-segment bar-segment-bottom" style="height:50%"></div></div>
-                            <div class="bar-group"><div class="bar-segment bar-segment-top" style="height:35%"></div><div class="bar-segment bar-segment-bottom" style="height:53%"></div></div>
-                            <div class="bar-group"><div class="bar-segment bar-segment-top" style="height:30%"></div><div class="bar-segment bar-segment-bottom" style="height:45%"></div></div>
-                            <div class="bar-group"><div class="bar-segment bar-segment-top" style="height:24%"></div><div class="bar-segment bar-segment-bottom" style="height:36%"></div></div>
-                        </div>
+                        <div class="bars" id="vb-bars"></div>
                     </div>
-                    <div class="chart-months">
-                        <span>JAN</span>
-                        <span>FEB</span>
-                        <span>MAR</span>
-                        <span>APR</span>
-                        <span class="month-active">MAY</span>
-                        <span>JUN</span>
-                        <span>JUL</span>
-                        <span class="month-active">AUG</span>
-                        <span>SEP</span>
-                        <span class="month-active">OCT</span>
-                        <span>NOV</span>
-                        <span>DEC</span>
-                    </div>
+                    <div class="chart-months" id="vb-months"></div>
                 </div>
 
                 <div class="chart-panel chart-panel-small">
@@ -259,12 +222,12 @@
                         <div class="legend-item legend-item-inline donut-legend">
                             <span class="legend-dot legend-dot-new"></span>
                             <span class="legend-label">New</span>
-                            <span class="legend-value">19%</span>
+                            <span class="legend-value" id="donut-new-pct"></span>
                         </div>
-                        <div class="donut-chart">
+                        <div class="donut-chart" id="donut-chart">
                             <div class="donut-hole">
                                 <span class="donut-label">Buyers</span>
-                                <span class="donut-value">48%</span>
+                                <span class="donut-value" id="donut-value"></span>
                             </div>
                         </div>
                     </div>
@@ -327,8 +290,8 @@
                     </div>
 
                     <div class="sv-totals">
-                        <span class="sv-total sv-total-sales">$562.6K</span>
-                        <span class="sv-total sv-total-purchases">$536.5K</span>
+                        <span class="sv-total sv-total-sales" id="sv-total-sales"></span>
+                        <span class="sv-total sv-total-purchases" id="sv-total-purchases"></span>
                     </div>
 
                     <div class="sv-chart">
@@ -355,25 +318,12 @@
                                     <stop offset="100%" stop-color="#14b8a6" stop-opacity="0"></stop>
                                 </linearGradient>
                             </defs>
-                            <polygon points="20,105 60,95 100,100 140,85 180,70 220,60 260,45 300,38 340,50 380,58 420,72 460,65 460,140 20,140" fill="url(#salesAreaGradient)"></polygon>
-                            <polyline points="20,105 60,95 100,100 140,85 180,70 220,60 260,45 300,38 340,50 380,58 420,72 460,65" fill="none" stroke="#14b8a6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></polyline>
-                            <polyline points="20,112 60,102 100,108 140,92 180,78 220,66 260,52 300,44 340,56 380,64 420,78 460,72" fill="none" stroke="#f2994a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                            <polygon id="sv-area" fill="url(#salesAreaGradient)"></polygon>
+                            <polyline id="sv-sales-line" fill="none" stroke="#14b8a6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                            <polyline id="sv-purchase-line" fill="none" stroke="#f2994a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline>
                         </svg>
                     </div>
-                    <div class="chart-months sv-months">
-                        <span>JAN</span>
-                        <span>FEB</span>
-                        <span>MAR</span>
-                        <span>APR</span>
-                        <span>MAY</span>
-                        <span>JUN</span>
-                        <span>JUL</span>
-                        <span>AUG</span>
-                        <span>SEP</span>
-                        <span>OCT</span>
-                        <span>NOV</span>
-                        <span>DEC</span>
-                    </div>
+                    <div class="chart-months sv-months" id="sv-months"></div>
                 </div>
             </section>
             </div>
