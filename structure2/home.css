@@ -56,9 +56,34 @@
             border-radius: 2px;
         }
 
-        /* Auth Menu Container */
+        /* Auth & Nav Menu Container */
         .auth-menu {
             display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #4b5563;
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 50px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: #4338ca;
+            background-color: #f5f3ff;
         }
 
         .auth-buttons {
@@ -399,10 +424,10 @@
                 display: flex;
             }
 
-            /* Sliding Auth Menu - Hidden behind nav initially */
+            /* Sliding Auth & Nav Menu - Hidden behind nav initially */
             .auth-menu {
                 position: absolute;
-                top: -200px; /* Hidden far above */
+                top: -280px; /* Hidden far above */
                 left: 0;
                 width: 100%;
                 background-color: #ffffff;
@@ -411,6 +436,20 @@
                 transition: top 0.4s ease-in-out;
                 z-index: -1; /* Placed behind the top-nav bar */
                 border-bottom: 1px solid #e5e7eb;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                width: 100%;
+            }
+
+            .nav-link {
+                width: 100%;
+                justify-content: center;
+                padding: 10px;
+                background-color: #f9fafb;
+                border: 1px solid #e5e7eb;
             }
 
             /* Triggers slide down */
