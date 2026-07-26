@@ -22,25 +22,39 @@
         <!-- Gradient Readability Overlay -->
         <div class="hero-overlay"></div>
 
-        <!-- Floating Pill Navigation Header -->
+        <!-- Header Bar across Hero -->
         <header class="navbar-wrapper">
-            <nav class="pill-nav">
-                <!-- Brand Logo & Name -->
-                <a href="home.html" class="nav-brand">
-                    <i class="fa-solid fa-circle-nodes"></i>
-                    <span>ksearch</span>
-                </a>
+            <!-- Brand Logo at Far Left -->
+            <a href="home.html" class="nav-brand">
+                <i class="fa-solid fa-circle-nodes"></i>
+                <span>ksearch</span>
+            </a>
 
-                <!-- Navigation Links -->
-                <div class="nav-menu">
+            <!-- Hamburger Button (Mobile) -->
+            <button class="hamburger" id="hamburgerMenu" aria-label="Toggle Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <!-- Nav & Auth Container (Collapsible on Mobile) -->
+            <div class="nav-auth-container" id="mobileDropMenu">
+                <!-- Center Floating Pill Navigation -->
+                <nav class="pill-nav">
                     <a href="home.html" class="nav-item active">Home</a>
                     <a href="#" class="nav-item">Services</a>
                     <a href="#" class="nav-item">Partners</a>
                     <a href="#" class="nav-item">Team</a>
                     <a href="#" class="nav-item">Blog</a>
                     <a href="#" class="nav-item">Contact</a>
+                </nav>
+
+                <!-- Auth Buttons at Far Right -->
+                <div class="auth-buttons">
+                    <button class="sign-in-btn" onclick="window.location.href='signin.html'">Sign In</button>
+                    <button class="sign-up-btn">Sign Up</button>
                 </div>
-            </nav>
+            </div>
         </header>
 
         <!-- Hero Content Section -->

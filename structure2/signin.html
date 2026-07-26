@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - ksearch</title>
+    
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts: Space Grotesk -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="signin.css">
+</head>
+<body>
+
+    <!-- Ambient Light Blue Blurred Backdrop Shapes -->
+    <div class="bg-blur-orb orb-1"></div>
+    <div class="bg-blur-orb orb-2"></div>
+    <div class="bg-blur-orb orb-3"></div>
+
+    <!-- Top Left Brand -->
+    <div class="page-header">
+        <a href="home.html" class="brand">
+            <i class="fa-solid fa-circle-nodes"></i>
+            <span>ksearch</span>
+        </a>
+    </div>
+
+    <!-- Main Sign In Container -->
+    <main class="signin-container">
+        <div class="signin-card">
+            
+            <!-- Card Header -->
+            <div class="card-header">
+                <h2>Sign in with email</h2>
+                <p>Make a new doc to bring your words, data, and teams together. For free</p>
+            </div>
+
+            <!-- Form -->
+            <form class="signin-form" onsubmit="event.preventDefault();">
+                
+                <!-- Email Input -->
+                <div class="input-group">
+                    <i class="fa-regular fa-envelope input-icon"></i>
+                    <input type="email" placeholder="Email" required id="emailInput">
+                </div>
+
+                <!-- Password Input -->
+                <div class="input-group">
+                    <i class="fa-solid fa-lock input-icon"></i>
+                    <input type="password" placeholder="Password" required id="passwordInput">
+                    <i class="fa-regular fa-eye-slash toggle-password" id="togglePassword"></i>
+                </div>
+
+                <!-- Forgot Password -->
+                <div class="form-options">
+                    <a href="#" class="forgot-link">Forgot password?</a>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn">Get Started</button>
+                
+            </form>
+
+        </div>
+    </main>
+
+</body>
+<script src="signin.js"></script>
+</html>
