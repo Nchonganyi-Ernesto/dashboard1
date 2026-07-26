@@ -18,7 +18,7 @@
 <body>
 
     <!-- Hero Section with Full Edge-to-Edge Background Image -->
-    <section class="hero-container">
+    <section class="hero-container" id="home">
         <!-- Gradient Readability Overlay -->
         <div class="hero-overlay"></div>
 
@@ -41,12 +41,11 @@
             <div class="nav-auth-container" id="mobileDropMenu">
                 <!-- Center Floating Pill Navigation -->
                 <nav class="pill-nav">
-                    <a href="home.html" class="nav-item active">Home</a>
-                    <a href="#" class="nav-item">Services</a>
-                    <a href="#" class="nav-item">Partners</a>
-                    <a href="#" class="nav-item">Team</a>
-                    <a href="#" class="nav-item">Blog</a>
-                    <a href="#" class="nav-item">Contact</a>
+                    <a href="#home" class="nav-item active">Home</a>
+                    <a href="#services" class="nav-item">Services</a>
+                    <a href="#how-it-works" class="nav-item">How It Works</a>
+                    <a href="#pricing" class="nav-item">Pricing</a>
+                    <a href="#testimonials" class="nav-item">Testimonials</a>
                 </nav>
 
                 <!-- Auth Buttons at Far Right -->
@@ -301,6 +300,150 @@
 
         </div>
     </section>
+
+    <!-- Testimonials / Customer Reviews Section with Dynamic Moving Background -->
+    <section class="testimonials-section" id="testimonials">
+        <!-- Dynamic Moving Background Layer & Orbs -->
+        <div class="dynamic-bg-glow glow-1"></div>
+        <div class="dynamic-bg-glow glow-2"></div>
+        <div class="dynamic-bg-glow glow-3"></div>
+
+        <div class="testimonials-container">
+            
+            <!-- Section Header -->
+            <div class="testimonials-header">
+                <div class="testimonials-badge">
+                    <i class="fa-solid fa-quote-left"></i>
+                    <span>Customer Feedback</span>
+                </div>
+                <h2 class="testimonials-title">What Our Customers Say</h2>
+                <p class="testimonials-description">See how businesses and advertisers scale their revenue and reach with ksearch precision ads.</p>
+            </div>
+
+            <!-- 3 Testimonial Cards Grid -->
+            <div class="testimonials-grid">
+                
+                <!-- Card 1 -->
+                <div class="testimonial-card">
+                    <div class="card-stars">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Switching to ksearch ads boosted our click-through rate by 340% within the first month. The search targeting is incredibly accurate."</p>
+                    <div class="author-info">
+                        <div class="author-avatar">
+                            <i class="fa-solid fa-user-tie"></i>
+                        </div>
+                        <div class="author-details">
+                            <h4 class="author-name">Jean-Paul MBIDA</h4>
+                            <p class="author-role">CMO at FinTech West</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="testimonial-card featured-testimonial">
+                    <div class="card-stars">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"The dashboard analytics in FCFA give us full transparency over our return on ad spend. Setup took under 10 minutes!"</p>
+                    <div class="author-info">
+                        <div class="author-avatar">
+                            <i class="fa-solid fa-user-ninja"></i>
+                        </div>
+                        <div class="author-details">
+                            <h4 class="author-name">Amina KAMARA</h4>
+                            <p class="author-role">Founder, AfriMarket Hub</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="testimonial-card">
+                    <div class="card-stars">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"ksearch search ads generate higher intent leads than any social media campaigns we've run in the past. Highly recommended!"</p>
+                    <div class="author-info">
+                        <div class="author-avatar">
+                            <i class="fa-solid fa-user-gear"></i>
+                        </div>
+                        <div class="author-details">
+                            <h4 class="author-name">Samuel ETO'O</h4>
+                            <p class="author-role">Growth Lead, TechNova</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer Section with Wavy Top Border -->
+    <footer class="footer-section">
+        <!-- SVG Wavy Top Border -->
+        <div class="footer-wave-container">
+            <svg class="footer-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" preserveAspectRatio="none">
+                <path fill="#0b1329" d="M0,32L48,42.7C96,53,192,75,288,80C384,85,480,75,576,64C672,53,768,43,864,48C960,53,1056,75,1152,80C1248,85,1344,75,1392,70L1440,64L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z"></path>
+            </svg>
+        </div>
+
+        <div class="footer-container">
+            
+            <!-- Top Footer Content -->
+            <div class="footer-main">
+                
+                <!-- Brand & Description -->
+                <div class="footer-brand-col">
+                    <a href="home.html" class="footer-brand">
+                        <i class="fa-solid fa-circle-nodes"></i>
+                        <span>ksearch</span>
+                    </a>
+                    <p class="footer-desc">Empowering brands with precision search ads, real-time FCFA analytics, and instant campaign launch.</p>
+                </div>
+
+                <!-- Page Navigation Links -->
+                <div class="footer-nav-col">
+                    <h4 class="footer-title">Page Navigation</h4>
+                    <ul class="footer-links">
+                        <li><a href="home.html"><i class="fa-solid fa-house"></i> Home</a></li>
+                        <li><a href="#services"><i class="fa-solid fa-layer-group"></i> Services</a></li>
+                        <li><a href="#how-it-works"><i class="fa-solid fa-route"></i> How It Works</a></li>
+                        <li><a href="#pricing"><i class="fa-solid fa-tags"></i> Pricing</a></li>
+                        <li><a href="#testimonials"><i class="fa-solid fa-quote-left"></i> Testimonials</a></li>
+                    </ul>
+                </div>
+
+                <!-- Quick Actions / Auth -->
+                <div class="footer-action-col">
+                    <h4 class="footer-title">Account Actions</h4>
+                    <div class="footer-auth-buttons">
+                        <a href="signin.html" class="footer-btn signin">Sign In</a>
+                        <a href="signup.html" class="footer-btn signup">Sign Up</a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bottom Copyright Bar -->
+            <div class="footer-bottom">
+                <p>&copy; 2026 ksearch Ads Platform. All rights reserved.</p>
+            </div>
+
+        </div>
+    </footer>
 
 </body>
 <script src="adds.js"></script>
