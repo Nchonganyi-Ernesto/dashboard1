@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Ads Dashboard - ksearch</title>
+    
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts: Space Grotesk & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="ads-dashboard.css">
+</head>
+<body>
+
+    <!-- Header Bar with Edge-to-Edge Glassmorphism Navigation -->
+    <header class="dashboard-navbar">
+        <div class="navbar-inner">
+            <!-- Brand Logo at Far Left -->
+            <a href="home.html" class="nav-brand">
+                <i class="fa-solid fa-circle-nodes"></i>
+                <span>ksearch</span>
+                <span class="brand-tag">Ads Dashboard</span>
+            </a>
+
+            <!-- Hamburger Button (Mobile) -->
+            <button class="hamburger" id="hamburgerMenu" aria-label="Toggle Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <!-- Nav & Profile Container (Collapsible on Mobile) -->
+            <div class="nav-auth-container" id="mobileDropMenu">
+                <!-- Center Floating Pill Navigation -->
+                <nav class="pill-nav">
+                    <a href="#overview-section" class="nav-item active" id="nav-overview">
+                        <i class="fa-solid fa-chart-pie"></i>
+                        <span>Overview</span>
+                    </a>
+                    <a href="#apply-section" class="nav-item" id="nav-apply">
+                        <i class="fa-solid fa-bullhorn"></i>
+                        <span>Apply for Ads</span>
+                    </a>
+                    <a href="#history-section" class="nav-item" id="nav-history">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                        <span>History</span>
+                    </a>
+                    <a href="#settings-section" class="nav-item" id="nav-settings">
+                        <i class="fa-solid fa-gear"></i>
+                        <span>Settings</span>
+                    </a>
+                </nav>
+
+                <!-- Profile Widget at Far Right with Side Emoji -->
+                <div class="profile-widget">
+                    <button class="profile-btn" id="profileDropdownBtn" aria-expanded="false">
+                        <span class="profile-emoji">👤</span>
+                        <span class="profile-name">Alex Rivera</span>
+                        <span class="badge-status">Pro</span>
+                        <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                    </button>
+
+                    <!-- Profile Dropdown Card -->
+                    <div class="profile-dropdown-menu" id="profileDropdownMenu">
+                        <div class="profile-menu-header">
+                            <div class="profile-avatar-emoji">👤</div>
+                            <div class="profile-user-info">
+                                <h4 class="user-display-name">Alex Rivera</h4>
+                                <p class="user-email">alex.rivera@ksearch.io</p>
+                                <span class="user-role-badge"><i class="fa-solid fa-crown"></i> Advertiser Pro</span>
+                            </div>
+                        </div>
+                        <div class="profile-menu-divider"></div>
+                        <ul class="profile-menu-links">
+                            <li>
+                                <a href="#settings-section" class="dropdown-item" id="menu-profile">
+                                    <i class="fa-solid fa-user"></i>
+                                    <span>My Profile</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#history-section" class="dropdown-item" id="menu-history">
+                                    <i class="fa-solid fa-rectangle-ad"></i>
+                                    <span>Applied Ads</span>
+                                    <span class="count-badge">5 Active</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#settings-section" class="dropdown-item" id="menu-settings">
+                                    <i class="fa-solid fa-sliders"></i>
+                                    <span>Account Settings</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="profile-menu-divider"></div>
+                        <div class="profile-menu-footer">
+                            <a href="signin.html" class="logout-btn">
+                                <i class="fa-solid fa-right-from-bracket"></i>
+                                <span>Sign Out</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard Content Container -->
+    <div class="dashboard-container">
+        
+        <!-- Welcome Hero Banner -->
+        <section class="welcome-banner">
+            <div class="welcome-text">
+                <h1>Welcome back, Alex! 👋</h1>
+                <p>Manage your active campaigns, track search ad performance in FCFA, and apply for new ad placements.</p>
+            </div>
+            <div class="banner-action">
+                <a href="#apply-section" class="btn-primary-launch" id="quickApplyBtn">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Apply for New Ad</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- KPI Metrics Grid (Overview Section) -->
+        <section class="section-container" id="overview-section">
+            <div class="section-title-row">
+                <h2><i class="fa-solid fa-chart-line"></i> Performance Overview</h2>
+                <span class="live-indicator"><span class="pulse-dot"></span> Live Data</span>
+            </div>
+
+            <div class="kpi-grid">
+                <!-- KPI 1: Applied Ads Count -->
+                <div class="kpi-card">
+                    <div class="kpi-icon-wrap icon-purple">
+                        <i class="fa-solid fa-layer-group"></i>
+                    </div>
+                    <div class="kpi-data">
+                        <span class="kpi-label">Ads Applied</span>
+                        <h3 class="kpi-value" id="appliedCount">5</h3>
+                        <span class="kpi-trend positive"><i class="fa-solid fa-arrow-up"></i> +2 this month</span>
+                    </div>
+                </div>
+
+                <!-- KPI 2: Active Campaigns -->
+                <div class="kpi-card">
+                    <div class="kpi-icon-wrap icon-teal">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <div class="kpi-data">
+                        <span class="kpi-label">Active Campaigns</span>
+                        <h3 class="kpi-value">5</h3>
+                        <span class="kpi-trend positive"><i class="fa-solid fa-bolt"></i> 100% Running</span>
+                    </div>
+                </div>
+
+                <!-- KPI 3: Total Clicks -->
+                <div class="kpi-card">
+                    <div class="kpi-icon-wrap icon-indigo">
+                        <i class="fa-solid fa-arrow-pointer"></i>
+                    </div>
+                    <div class="kpi-data">
+                        <span class="kpi-label">Total Clicks</span>
+                        <h3 class="kpi-value">6,840</h3>
+                        <span class="kpi-trend positive"><i class="fa-solid fa-chart-line"></i> 4.8% CTR</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Apply for Ads Section -->
+        <section class="section-container" id="apply-section">
+            <div class="section-title-row">
+                <h2><i class="fa-solid fa-bullhorn"></i> Apply for New Search Ad</h2>
+                <p class="section-subtitle">Fill in your campaign details to submit an ad application for ksearch sponsored results.</p>
+            </div>
+
+            <div class="card-box form-card">
+                <form id="applyAdForm" class="ad-application-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="campaignName"><i class="fa-solid fa-pen"></i> Campaign Name</label>
+                            <input type="text" id="campaignName" placeholder="e.g. Summer Tech Promo 2026" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="keywords"><i class="fa-solid fa-tags"></i> Target Search Keywords</label>
+                            <input type="text" id="keywords" placeholder="e.g. tech, AI tools, fintech, online store" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="budget"><i class="fa-solid fa-coins"></i> Budget (FCFA / month)</label>
+                            <select id="budget" required>
+                                <option value="20000">20,000 FCFA / Month</option>
+                                <option value="30000" selected>30,000 FCFA / Month</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="targetUrl"><i class="fa-solid fa-link"></i> Target Destination URL</label>
+                            <input type="url" id="targetUrl" placeholder="https://yourwebsite.com/landing-page" required>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="adDescription"><i class="fa-solid fa-align-left"></i> Ad Description / Copy</label>
+                            <textarea id="adDescription" rows="3" placeholder="Describe your offer or business value proposition..." required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-submit-ad">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>Submit Ad Application</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Applied Ads History Section -->
+        <section class="section-container" id="history-section">
+            <div class="section-title-row">
+                <h2><i class="fa-solid fa-clock-rotate-left"></i> Applied Ads History</h2>
+                <span class="count-badge-large" id="historyBadge">5 Total Applied</span>
+            </div>
+
+            <div class="card-box table-card">
+                <div class="table-responsive">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Campaign Name</th>
+                                <th>Budget</th>
+                                <th>Date Applied</th>
+                                <th>Status</th>
+                                <th>Clicks</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                            <tr>
+                                <td><strong>FinTech West Launch</strong></td>
+                                <td>30,000 FCFA</td>
+                                <td>Jul 12, 2026</td>
+                                <td><span class="status-badge status-active"><i class="fa-solid fa-circle"></i> Active</span></td>
+                                <td>1,420</td>
+                            </tr>
+                            <tr>
+                                <td><strong>AfriMarket Tech Sale</strong></td>
+                                <td>30,000 FCFA</td>
+                                <td>Jul 08, 2026</td>
+                                <td><span class="status-badge status-active"><i class="fa-solid fa-circle"></i> Active</span></td>
+                                <td>2,150</td>
+                            </tr>
+                            <tr>
+                                <td><strong>NextGen AI Promo</strong></td>
+                                <td>20,000 FCFA</td>
+                                <td>Jun 25, 2026</td>
+                                <td><span class="status-badge status-active"><i class="fa-solid fa-circle"></i> Active</span></td>
+                                <td>980</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cloud Services Campaign</strong></td>
+                                <td>30,000 FCFA</td>
+                                <td>Jun 10, 2026</td>
+                                <td><span class="status-badge status-active"><i class="fa-solid fa-circle"></i> Active</span></td>
+                                <td>1,240</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Eco Energy Solutions</strong></td>
+                                <td>30,000 FCFA</td>
+                                <td>May 15, 2026</td>
+                                <td><span class="status-badge status-active"><i class="fa-solid fa-circle"></i> Active</span></td>
+                                <td>1,050</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Settings & Profile Section -->
+        <section class="section-container" id="settings-section">
+            <div class="section-title-row">
+                <h2><i class="fa-solid fa-gear"></i> Account & Profile Settings</h2>
+            </div>
+
+            <div class="settings-grid">
+                <!-- User Profile Card -->
+                <div class="card-box profile-card">
+                    <div class="profile-avatar-large">👤</div>
+                    <h3 class="profile-card-name">Alex Rivera</h3>
+                    <p class="profile-card-email">alex.rivera@ksearch.io</p>
+                    <span class="status-badge status-active" style="margin-top: 8px;"><i class="fa-solid fa-crown"></i> Advertiser Pro</span>
+                    
+                    <div class="profile-meta-list">
+                        <div class="meta-item">
+                            <span class="meta-label">Account ID:</span>
+                            <span class="meta-value">#ADV-88492</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Member Since:</span>
+                            <span class="meta-value">January 2025</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Plan Type:</span>
+                            <span class="meta-value">Pro Growth (30k FCFA/mo)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Form -->
+                <div class="card-box settings-form-card">
+                    <h3>Edit Profile Details</h3>
+                    <form class="settings-form">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" value="Alex Rivera" id="settingFullName">
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" value="alex.rivera@ksearch.io" id="settingEmail">
+                        </div>
+                        <div class="form-group">
+                            <label>Company / Brand Name</label>
+                            <input type="text" value="Rivera Digital Ltd.">
+                        </div>
+                        <div class="form-group">
+                            <label>Preferred Currency</label>
+                            <input type="text" value="FCFA (CFA Franc)" disabled readonly>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn-save-settings" id="saveSettingsBtn">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-notification" id="toast">
+        <i class="fa-solid fa-circle-check"></i>
+        <span id="toastMessage">Ad application submitted successfully!</span>
+    </div>
+
+    <script src="ads-dashboard.js"></script>
+</body>
+</html>
