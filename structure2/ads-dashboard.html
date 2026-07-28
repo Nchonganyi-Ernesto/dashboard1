@@ -60,7 +60,7 @@
                 <div class="profile-widget">
                     <button class="profile-btn" id="profileDropdownBtn" aria-expanded="false">
                         <span class="profile-emoji">👤</span>
-                        <span class="profile-name">Alex Rivera</span>
+                        <span class="profile-name">Loading...</span>
                         <span class="badge-status">Pro</span>
                         <i class="fa-solid fa-chevron-down arrow-icon"></i>
                     </button>
@@ -70,8 +70,8 @@
                         <div class="profile-menu-header">
                             <div class="profile-avatar-emoji">👤</div>
                             <div class="profile-user-info">
-                                <h4 class="user-display-name">Alex Rivera</h4>
-                                <p class="user-email">alex.rivera@ksearch.io</p>
+                                <h4 class="user-display-name">Loading...</h4>
+                                <p class="user-email"></p>
                                 <span class="user-role-badge"><i class="fa-solid fa-crown"></i> Advertiser Pro</span>
                             </div>
                         </div>
@@ -87,7 +87,7 @@
                                 <a href="#history-section" class="dropdown-item" id="menu-history">
                                     <i class="fa-solid fa-rectangle-ad"></i>
                                     <span>Applied Ads</span>
-                                    <span class="count-badge">5 Active</span>
+                                    <span class="count-badge">0 Active</span>
                                 </a>
                             </li>
                             <li>
@@ -99,7 +99,7 @@
                         </ul>
                         <div class="profile-menu-divider"></div>
                         <div class="profile-menu-footer">
-                            <a href="signin.html" class="logout-btn">
+                            <a href="#" class="logout-btn" id="logoutBtn">
                                 <i class="fa-solid fa-right-from-bracket"></i>
                                 <span>Sign Out</span>
                             </a>
@@ -116,7 +116,7 @@
         <!-- Welcome Hero Banner -->
         <section class="welcome-banner">
             <div class="welcome-text">
-                <h1>Welcome Alex</h1>
+                <h1>Welcome</h1>
                 <p>Manage your active campaigns, track search ad performance in FCFA, and apply for new ad placements.</p>
             </div>
             <div class="banner-action">
@@ -142,8 +142,8 @@
                     </div>
                     <div class="kpi-data">
                         <span class="kpi-label">Ads Applied</span>
-                        <h3 class="kpi-value" id="appliedCount">5</h3>
-                        <span class="kpi-trend positive"><i class="fa-solid fa-arrow-up"></i> +2 this month</span>
+                        <h3 class="kpi-value" id="appliedCount">0</h3>
+                        <span class="kpi-trend positive"><i class="fa-solid fa-bolt"></i> Real-time</span>
                     </div>
                 </div>
 
@@ -154,8 +154,8 @@
                     </div>
                     <div class="kpi-data">
                         <span class="kpi-label">Active Campaigns</span>
-                        <h3 class="kpi-value">5</h3>
-                        <span class="kpi-trend positive"><i class="fa-solid fa-bolt"></i> 100% Running</span>
+                        <h3 class="kpi-value">0</h3>
+                        <span class="kpi-trend positive"><i class="fa-solid fa-bolt"></i> Live Running</span>
                     </div>
                 </div>
 
@@ -166,8 +166,8 @@
                     </div>
                     <div class="kpi-data">
                         <span class="kpi-label">Total Clicks</span>
-                        <h3 class="kpi-value">6,840</h3>
-                        <span class="kpi-trend positive"><i class="fa-solid fa-chart-line"></i> 4.8% CTR</span>
+                        <h3 class="kpi-value">0</h3>
+                        <span class="kpi-trend positive"><i class="fa-solid fa-chart-line"></i> Live Metrics</span>
                     </div>
                 </div>
             </div>
@@ -226,7 +226,7 @@
         <section class="section-container" id="history-section">
             <div class="section-title-row">
                 <h2><i class="fa-solid fa-clock-rotate-left"></i> Applied Ads History</h2>
-                <span class="count-badge-large" id="historyBadge">5 Total Applied</span>
+                <span class="count-badge-large" id="historyBadge">0 Total Applied</span>
             </div>
 
             <div class="card-box table-card">
@@ -243,39 +243,9 @@
                         </thead>
                         <tbody id="historyTableBody">
                             <tr>
-                                <td><strong>FinTech West Launch</strong></td>
-                                <td>30,000 FCFA</td>
-                                <td>Jul 12, 2026</td>
-                                <td><span class="status-badge status-active"><i class="fa-solid fa-circle"></i> Active</span></td>
-                                <td>1,420</td>
-                            </tr>
-                            <tr>
-                                <td><strong>AfriMarket Tech Sale</strong></td>
-                                <td>30,000 FCFA</td>
-                                <td>Jul 08, 2026</td>
-                                <td><span class="status-badge status-active"><i class="fa-solid fa-circle"></i> Active</span></td>
-                                <td>2,150</td>
-                            </tr>
-                            <tr>
-                                <td><strong>NextGen AI Promo</strong></td>
-                                <td>20,000 FCFA</td>
-                                <td>Jun 25, 2026</td>
-                                <td><span class="status-badge status-active"><i class="fa-solid fa-circle"></i> Active</span></td>
-                                <td>980</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Cloud Services Campaign</strong></td>
-                                <td>30,000 FCFA</td>
-                                <td>Jun 10, 2026</td>
-                                <td><span class="status-badge status-active"><i class="fa-solid fa-circle"></i> Active</span></td>
-                                <td>1,240</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Eco Energy Solutions</strong></td>
-                                <td>30,000 FCFA</td>
-                                <td>May 15, 2026</td>
-                                <td><span class="status-badge status-active"><i class="fa-solid fa-circle"></i> Active</span></td>
-                                <td>1,050</td>
+                                <td colspan="5" style="text-align: center; color: rgba(255,255,255,0.5); padding: 25px;">
+                                    <i class="fa-solid fa-spinner fa-spin"></i> Loading campaign data...
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -293,22 +263,18 @@
                 <!-- User Profile Card -->
                 <div class="card-box profile-card">
                     <div class="profile-avatar-large">👤</div>
-                    <h3 class="profile-card-name">Alex Rivera</h3>
-                    <p class="profile-card-email">alex.rivera@ksearch.io</p>
+                    <h3 class="profile-card-name">Loading...</h3>
+                    <p class="profile-card-email"></p>
                     <span class="status-badge status-active" style="margin-top: 8px;"><i class="fa-solid fa-crown"></i> Advertiser Pro</span>
                     
                     <div class="profile-meta-list">
                         <div class="meta-item">
-                            <span class="meta-label">Account ID:</span>
-                            <span class="meta-value">#ADV-88492</span>
-                        </div>
-                        <div class="meta-item">
-                            <span class="meta-label">Member Since:</span>
-                            <span class="meta-value">January 2025</span>
+                            <span class="meta-label">Member Status:</span>
+                            <span class="meta-value">Active</span>
                         </div>
                         <div class="meta-item">
                             <span class="meta-label">Plan Type:</span>
-                            <span class="meta-value">Pro Growth (30k FCFA/mo)</span>
+                            <span class="meta-value">Pro Growth</span>
                         </div>
                     </div>
                 </div>
@@ -319,15 +285,11 @@
                     <form class="settings-form">
                         <div class="form-group">
                             <label>Full Name</label>
-                            <input type="text" value="Alex Rivera" id="settingFullName">
+                            <input type="text" value="" placeholder="Your Full Name" id="settingFullName">
                         </div>
                         <div class="form-group">
                             <label>Email Address</label>
-                            <input type="email" value="alex.rivera@ksearch.io" id="settingEmail">
-                        </div>
-                        <div class="form-group">
-                            <label>Company / Brand Name</label>
-                            <input type="text" value="Rivera Digital Ltd.">
+                            <input type="email" value="" placeholder="Your Email Address" id="settingEmail" readonly disabled>
                         </div>
                         <div class="form-group">
                             <label>Preferred Currency</label>
@@ -349,6 +311,12 @@
         <span id="toastMessage">Ad application submitted successfully!</span>
     </div>
 
+    <!-- Firebase SDK & Auth Guard -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="auth-guard.js"></script>
     <script src="ads-dashboard.js"></script>
 </body>
 </html>

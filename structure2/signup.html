@@ -41,7 +41,10 @@
             </div>
 
             <!-- Form -->
-            <form class="signup-form" onsubmit="event.preventDefault();">
+            <form class="signup-form" id="signupForm">
+                
+                <!-- Error Message Alert Box -->
+                <div class="auth-error-message" id="authError" style="display:none; color: #ff4d4d; background: rgba(255, 77, 77, 0.1); border: 1px solid rgba(255, 77, 77, 0.3); padding: 10px 14px; border-radius: 8px; margin-bottom: 15px; font-size: 0.9rem; text-align: center;"></div>
                 
                 <!-- Full Name Input -->
                 <div class="input-group">
@@ -78,7 +81,7 @@
                 </div>
 
                 <!-- Submit Button -->
-                <button type="submit" class="submit-btn">Create Account</button>
+                <button type="submit" class="submit-btn" id="submitBtn">Create Account</button>
                 
                 <!-- Footer Redirect Link -->
                 <div class="form-footer">
@@ -90,6 +93,11 @@
         </div>
     </main>
 
+    <!-- Firebase SDK & Config -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="auth-guard.js"></script>
+    <script src="signup.js"></script>
 </body>
-<script src="signup.js"></script>
 </html>

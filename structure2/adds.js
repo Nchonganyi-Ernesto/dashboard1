@@ -51,4 +51,45 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.addEventListener('scroll', highlightNavOnScroll);
+
+    // Apply for Ads CTA Guard
+    const applyAdsCta = document.getElementById('applyAdsCta');
+    if (applyAdsCta) {
+        applyAdsCta.addEventListener('click', (e) => {
+            e.preventDefault();
+            requireAuth(() => {
+                window.location.href = 'ads-dashboard.html#apply-section';
+            });
+        });
+    }
+
+    // Dynamic Auth Navigation Sync
+    if (typeof firebase !== 'undefined' && firebase.auth) {
+        firebase.auth().onAuthStateChanged(user => {
+            const authButtonsContainer = document.querySelector('.auth-buttons');
+            const footerAuthButtons = document.querySelector('.footer-auth-buttons');
+
+            if (user) {
+                const displayName = user.displayName || user.email.split('@')[0];
+                if (authButtonsContainer) {
+                    authButtonsContainer.innerHTML = `
+                        <button class="sign-up-btn" onclick="window.location.href='ads-dashboard.html'">
+                            <i class="fa-solid fa-gauge"></i> My Dashboard (${escapeHtml(displayName)})
+                        </button>
+                    `;
+                }
+                if (footerAuthButtons) {
+                    footerAuthButtons.innerHTML = `
+                        <a href="ads-dashboard.html" class="footer-btn signup">My Dashboard</a>
+                    `;
+                }
+            }
+        });
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/[&<>'"]/g, tag => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+        }[tag] || tag));
+    }
 });

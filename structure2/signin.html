@@ -41,7 +41,10 @@
             </div>
 
             <!-- Form -->
-            <form class="signin-form" onsubmit="event.preventDefault();">
+            <form class="signin-form" id="signinForm">
+                
+                <!-- Error Message Alert Box -->
+                <div class="auth-error-message" id="authError" style="display:none; color: #ff4d4d; background: rgba(255, 77, 77, 0.1); border: 1px solid rgba(255, 77, 77, 0.3); padding: 10px 14px; border-radius: 8px; margin-bottom: 15px; font-size: 0.9rem; text-align: center;"></div>
                 
                 <!-- Email Input -->
                 <div class="input-group">
@@ -62,13 +65,23 @@
                 </div>
 
                 <!-- Submit Button -->
-                <button type="submit" class="submit-btn">Get Started</button>
+                <button type="submit" class="submit-btn" id="submitBtn">Sign In</button>
                 
+                <!-- Footer Redirect Link -->
+                <div class="form-footer" style="text-align: center; margin-top: 15px; font-size: 0.9rem; color: rgba(255,255,255,0.7);">
+                    <p>Don't have an account? <a href="signup.html" style="color: #4fc3f7; text-decoration: none; font-weight: 500;">Sign Up</a></p>
+                </div>
+
             </form>
 
         </div>
     </main>
 
+    <!-- Firebase SDK & Config -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="auth-guard.js"></script>
+    <script src="signin.js"></script>
 </body>
-<script src="signin.js"></script>
 </html>

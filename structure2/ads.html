@@ -65,7 +65,7 @@
             <h1 class="hero-title">Amplify Your Brand with Precision Search Ads</h1>
             <p class="hero-subtitle">Connect with high-intent users at the exact moment they search. Scale your business with data-driven insights and AI precision.</p>
             <div class="hero-actions">
-                <a href="#apply" class="cta-button primary-cta">
+                <a href="ads-dashboard.html#apply-section" class="cta-button primary-cta" id="applyAdsCta">
                     <span>Apply for Ads Now</span>
                     <i class="fa-solid fa-arrow-right"></i>
                 </a>
@@ -443,8 +443,11 @@
             </div>
 
         </div>
-    </footer>
-
+    <!-- Firebase SDK & Auth Guard -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="auth-guard.js"></script>
+    <script src="adds.js"></script>
 </body>
-<script src="adds.js"></script>
 </html>
