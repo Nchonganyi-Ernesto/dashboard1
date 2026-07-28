@@ -523,3 +523,136 @@
                 }
             }
         }
+
+/* ============================================================
+   SPONSORED SEARCH ADS CARDS
+   ============================================================ */
+.sponsored-ad-card {
+    background: #ffffff;
+    border: 1.5px solid #c7d2fe;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 14px rgba(67, 56, 202, 0.08);
+    transition: all 0.25 ease;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sponsored-ad-card:hover {
+    border-color: #4338ca;
+    box-shadow: 0 6px 20px rgba(67, 56, 202, 0.15);
+    transform: translateY(-2px);
+}
+
+.ad-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ad-badge {
+    background-color: #e0e7ff;
+    color: #4338ca;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    text-transform: uppercase;
+}
+
+.bid-badge {
+    background-color: #fef3c7;
+    color: #92400e;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+.bid-badge.top-rank {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.ad-title {
+    font-size: 17px;
+    color: #111827;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.ad-description {
+    font-size: 14px;
+    color: #4b5563;
+    line-height: 1.5;
+    font-weight: 300;
+}
+
+.ad-url-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 5px;
+    padding-top: 10px;
+    border-top: 1px solid #f3f4f6;
+}
+
+.ad-url-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #4338ca;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 50px;
+    transition: background-color 0.2s ease;
+}
+
+.ad-url-link:hover {
+    background-color: #3730a3;
+}
+
+.ad-keywords-list {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.ad-keyword-tag {
+    font-size: 10px;
+    color: #6b7280;
+    background: #f3f4f6;
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+/* Recent Search Chips in Feed Section */
+.recent-search-chip {
+    background-color: #f1f5f9;
+    color: #334155;
+    font-size: 12px;
+    font-weight: 400;
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    border: 1px solid #e2e8f0;
+}
+
+.recent-search-chip:hover {
+    background-color: #e0e7ff;
+    color: #4338ca;
+    border-color: #c7d2fe;
+}
+

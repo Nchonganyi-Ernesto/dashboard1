@@ -53,46 +53,61 @@
         <!-- Search Bar -->
         <div class="search-container">
             <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="Explore your next big idea...">
-            <button class="search-btn">Search</button>
+            <input type="text" id="searchInput" placeholder="Search keywords (e.g. tech, AI, fintech)...">
+            <button class="search-btn" id="searchBtn">Search</button>
         </div>
 
-        <!-- Section Header -->
-        <div class="section-header">
-            <h2>Trending Insights</h2>
-            <i class="fa-solid fa-arrow-trend-up"></i>
-        </div>
-
-        <!-- Insights Grid -->
-        <div class="insights-grid">
-            <!-- Card 1 -->
-            <div class="card">
-                <div class="card-top">
-                    <i class="fa-solid fa-chart-line"></i>
-                    <span class="badge-live">Live</span>
+        <!-- Dynamic Search Results Section -->
+        <div class="search-results-container" id="searchResults" style="display: none; margin-bottom: 35px;">
+            <div class="results-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 5px;">
+                <h2 style="font-size: 11px; font-weight: 600; color: #4338ca; letter-spacing: 1.5px; text-transform: uppercase;">
+                    <i class="fa-solid fa-bolt"></i> Sponsored Search Results
+                </h2>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span id="resultsCount" style="font-size: 12px; color: #6b7280;"></span>
+                    <button id="clearSearchBtn" style="background: none; border: none; color: #ef4444; font-size: 12px; cursor: pointer; font-weight: 500;"><i class="fa-solid fa-xmark"></i> Clear</button>
                 </div>
-                <h3>Global Market<br>Shifts 2024</h3>
             </div>
-            
-            <!-- Card 2 -->
-            <div class="card">
-                <div class="card-top">
-                    <i class="fa-solid fa-flask"></i>
-                </div>
-                <h3>Next-Gen<br>Quantum AI</h3>
-            </div>
+            <div class="results-list" id="resultsList" style="display: flex; flex-direction: column; gap: 15px;"></div>
         </div>
 
-        <!-- Personalized Feed Card -->
-        <div class="card feed-card">
-            <div class="feed-icon">
-                <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <div id="defaultHomeSections">
+            <!-- Section Header -->
+            <div class="section-header">
+                <h2>Trending Insights</h2>
+                <i class="fa-solid fa-arrow-trend-up"></i>
             </div>
-            <div class="feed-text">
-                <h3>Personalized Feed</h3>
-                <p>Based on your recent interests</p>
+
+            <!-- Insights Grid -->
+            <div class="insights-grid" id="trendingGrid">
+                <!-- Dynamically rendered top highest paid ads -->
+                <div class="card">
+                    <div class="card-top">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <span class="badge-live">Live</span>
+                    </div>
+                    <h3>Loading top paid ads...</h3>
+                </div>
             </div>
-            <i class="fa-solid fa-chevron-right"></i>
+
+            <!-- Recent Searches Feed Section -->
+            <div class="card feed-section-card" id="recentSearchesFeed" style="margin-bottom: 30px; padding: 20px;">
+                <div class="feed-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div class="feed-icon" style="width: 36px; height: 36px; font-size: 15px; background: #e0e7ff; color: #4338ca; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+                        </div>
+                        <div>
+                            <h3 style="font-size: 15px; color: #1f2937; font-weight: 500;">Recent Searches</h3>
+                            <p style="font-size: 12px; color: #6b7280; font-weight: 300;">Your search history</p>
+                        </div>
+                    </div>
+                    <button id="clearHistoryBtn" style="background: none; border: none; color: #ef4444; font-size: 11px; cursor: pointer; font-weight: 500; display: none;">Clear History</button>
+                </div>
+                <div class="recent-searches-list" id="recentSearchesList" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
+                    <span style="font-size: 13px; color: #94a3b8; font-weight: 300;">No recent searches yet.</span>
+                </div>
+            </div>
         </div>
 
         <!-- Filter Tags -->
@@ -105,21 +120,10 @@
         
     </div>
 
-    <!-- Floating Bottom Navigation -->
-    <nav class="bottom-nav">
-        <a href="#" class="bottom-nav-item active">
-            <i class="fa-solid fa-house"></i>
-            <span>Home</span>
-        </a>
-        <a href="#" class="bottom-nav-item">
-            <i class="fa-solid fa-rss"></i>
-            <span>Feeds</span>
-        </a>
-    </nav>
-
     <!-- Firebase SDK & Auth Guard -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
     <script src="auth-guard.js"></script>
     <script src="home.js"></script>

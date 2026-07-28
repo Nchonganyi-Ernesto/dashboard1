@@ -157,6 +157,14 @@ function updateUserKPIs(appliedCount, activeCount, clicksCount) {
     const appliedCountEl = document.getElementById('appliedCount');
     if (appliedCountEl) appliedCountEl.innerText = appliedCount;
 
+    // Active count KPI
+    const activeCountEl = document.getElementById('activeCount');
+    if (activeCountEl) activeCountEl.innerText = activeCount;
+
+    // Total Clicks KPI
+    const totalClicksEl = document.getElementById('totalClicks');
+    if (totalClicksEl) totalClicksEl.innerText = Number(clicksCount).toLocaleString();
+
     // History badge count
     const historyBadge = document.getElementById('historyBadge');
     if (historyBadge) historyBadge.innerText = `${appliedCount} Total Applied`;
@@ -164,19 +172,6 @@ function updateUserKPIs(appliedCount, activeCount, clicksCount) {
     // History badge count in menu dropdown
     const countBadge = document.querySelector('.count-badge');
     if (countBadge) countBadge.innerText = `${activeCount} Active`;
-
-    // Active Campaigns KPI card (2nd card in KPI grid)
-    const kpiCards = document.querySelectorAll('.kpi-card');
-    if (kpiCards.length >= 2) {
-        const activeValEl = kpiCards[1].querySelector('.kpi-value');
-        if (activeValEl) activeValEl.innerText = activeCount;
-    }
-
-    // Total Clicks KPI card (3rd card in KPI grid)
-    if (kpiCards.length >= 3) {
-        const clicksValEl = kpiCards[2].querySelector('.kpi-value');
-        if (clicksValEl) clicksValEl.innerText = clicksCount.toLocaleString();
-    }
 }
 
 // --- Submit Ad Application to Firestore ---

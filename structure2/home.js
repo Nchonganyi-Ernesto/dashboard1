@@ -1,4 +1,352 @@
+// ============================================================
+//  HOME PAGE SEARCH & AD BIDDING RANKING ENGINE - ksearch
+// ============================================================
+
 document.addEventListener('DOMContentLoaded', () => {
+    initNavigation();
+    initAuthSync();
+    initSearchEngine();
+    initGlobalClickTracker();
+    initRecentSearchesFeed();
+    loadTrendingHighestPaidAds();
+});
+
+// --- Recent Searches Feed (User Search History) ---
+function initRecentSearchesFeed() {
+    renderRecentSearchesFeed();
+
+    const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+    if (clearHistoryBtn) {
+        clearHistoryBtn.addEventListener('click', () => {
+            localStorage.removeItem('ksearch_recent_searches');
+            renderRecentSearchesFeed();
+        });
+    }
+}
+
+function getRecentSearches() {
+    try {
+        const stored = localStorage.getItem('ksearch_recent_searches');
+        return stored ? JSON.parse(stored) : [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function saveRecentSearch(query) {
+    if (!query || query.trim().length === 0) return;
+    const cleanQuery = query.trim();
+
+    let searches = getRecentSearches();
+    // Remove if already exists to move to top
+    searches = searches.filter(s => s.toLowerCase() !== cleanQuery.toLowerCase());
+    // Prepend new search
+    searches.unshift(cleanQuery);
+    // Keep max 6 recent searches
+    if (searches.length > 6) searches = searches.slice(0, 6);
+
+    localStorage.setItem('ksearch_recent_searches', JSON.stringify(searches));
+    renderRecentSearchesFeed();
+}
+
+function renderRecentSearchesFeed() {
+    const listContainer = document.getElementById('recentSearchesList');
+    const clearBtn = document.getElementById('clearHistoryBtn');
+    const searchInput = document.getElementById('searchInput');
+
+    if (!listContainer) return;
+
+    const searches = getRecentSearches();
+
+    if (searches.length === 0) {
+        listContainer.innerHTML = `<span style="font-size: 13px; color: #94a3b8; font-weight: 300;">No recent searches yet.</span>`;
+        if (clearBtn) clearBtn.style.display = 'none';
+        return;
+    }
+
+    if (clearBtn) clearBtn.style.display = 'inline-block';
+
+    listContainer.innerHTML = searches.map(term => `
+        <span class="recent-search-chip" data-query="${escapeHtml(term)}">
+            <i class="fa-solid fa-magnifying-glass" style="font-size: 10px; color: #6366f1;"></i>
+            <span>${escapeHtml(term)}</span>
+        </span>
+    `).join('');
+
+    // Click handler for recent search chips
+    listContainer.querySelectorAll('.recent-search-chip').forEach(chip => {
+        chip.addEventListener('click', function () {
+            const query = this.getAttribute('data-query');
+            if (query && searchInput) {
+                searchInput.value = query;
+                if (typeof window.triggerHomeSearch === 'function') {
+                    window.triggerHomeSearch(query);
+                }
+            }
+        });
+    });
+}
+
+// --- Global Click Tracker for All Sponsored Ad Links & Cards ---
+function initGlobalClickTracker() {
+    document.addEventListener('click', function (e) {
+        // Track clicks on Visit Website buttons (.ad-url-link)
+        const adLink = e.target.closest('.ad-url-link');
+        if (adLink) {
+            const adId = adLink.getAttribute('data-ad-id');
+            if (adId && typeof db !== 'undefined' && db) {
+                console.log('Recording website click for campaign ID:', adId);
+                db.collection('ad_campaigns').doc(adId).update({
+                    clicks: firebase.firestore.FieldValue.increment(1)
+                }).then(() => {
+                    console.log('Firestore click count successfully incremented for campaign:', adId);
+                }).catch(err => {
+                    console.error('Error updating click count in Firestore:', err);
+                });
+            }
+        }
+    });
+}
+
+// --- Fetch & Render Top Highest Paid Ads in Trending Insights ---
+async function loadTrendingHighestPaidAds() {
+    const trendingGrid = document.getElementById('trendingGrid');
+    if (!trendingGrid) return;
+
+    try {
+        let campaigns = [];
+        if (typeof db !== 'undefined' && db) {
+            const snapshot = await db.collection('ad_campaigns').get();
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                if (data.status === 'Active' || !data.status) {
+                    campaigns.push({ id: doc.id, ...data });
+                }
+            });
+        } else {
+            campaigns = getSampleAds();
+        }
+
+        // Sort descending by budget (highest paid first)
+        campaigns.sort((a, b) => Number(b.budget || 0) - Number(a.budget || 0));
+
+        // Take top 2 highest paid ads
+        const topAds = campaigns.slice(0, 2);
+
+        if (topAds.length === 0) {
+            trendingGrid.innerHTML = `
+                <div class="card" style="grid-column: 1 / -1; text-align: center; color: #64748b; padding: 20px;">
+                    No active sponsored ads available.
+                </div>
+            `;
+            return;
+        }
+
+        trendingGrid.innerHTML = topAds.map(ad => {
+            const targetUrl = ad.targetUrl || '#';
+            return `
+                <div class="card trending-ad-card" data-url="${escapeHtml(targetUrl)}" data-ad-id="${ad.id}">
+                    <div class="card-top">
+                        <i class="fa-solid fa-bolt" style="color: #4338ca;"></i>
+                    </div>
+                    <h3>${escapeHtml(ad.campaignName || 'Featured Promotion')}</h3>
+                    <p style="font-size: 12px; color: #64748b; margin-top: 6px; font-weight: 300; line-height: 1.4;">
+                        ${escapeHtml(ad.adDescription || '')}
+                    </p>
+                </div>
+            `;
+        }).join('');
+
+        // Attach Click Tracker & Navigation Listener to Trending Ad Cards
+        trendingGrid.querySelectorAll('.trending-ad-card').forEach(card => {
+            card.addEventListener('click', function () {
+                const adId = this.getAttribute('data-ad-id');
+                const url = this.getAttribute('data-url');
+
+                if (adId && typeof db !== 'undefined' && db) {
+                    db.collection('ad_campaigns').doc(adId).update({
+                        clicks: firebase.firestore.FieldValue.increment(1)
+                    }).catch(err => console.error('Error tracking click:', err));
+                }
+
+                if (url && url !== '#') {
+                    window.open(url, '_blank');
+                }
+            });
+        });
+
+    } catch (err) {
+        console.error('Error loading trending ads:', err);
+    }
+}
+
+// --- Search Engine Keyword Matching & Bidding Rank Logic ---
+function initSearchEngine() {
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const searchResults = document.getElementById('searchResults');
+    const resultsList = document.getElementById('resultsList');
+    const resultsCount = document.getElementById('resultsCount');
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
+    const defaultHomeSections = document.getElementById('defaultHomeSections');
+    const filterTags = document.querySelectorAll('.tag');
+
+    if (!searchInput || !searchBtn) return;
+
+    window.triggerHomeSearch = function(query) {
+        performSearch(query);
+    };
+
+    // Search button click
+    searchBtn.addEventListener('click', () => {
+        const query = searchInput.value.trim();
+        if (query) performSearch(query);
+    });
+
+    // Enter key press in search bar
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            const query = searchInput.value.trim();
+            if (query) performSearch(query);
+        }
+    });
+
+    // Clear search
+    if (clearSearchBtn) {
+        clearSearchBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            searchResults.style.display = 'none';
+            if (defaultHomeSections) defaultHomeSections.style.display = 'block';
+        });
+    }
+
+    // Filter tags click -> trigger search
+    filterTags.forEach(tag => {
+        tag.addEventListener('click', function () {
+            const tagQuery = this.innerText.toLowerCase().trim();
+            searchInput.value = tagQuery;
+            performSearch(tagQuery);
+        });
+    });
+
+    // Search execution function
+    async function performSearch(query) {
+        if (!query) return;
+
+        // Save to Recent Searches Feed History
+        saveRecentSearch(query);
+
+        const lowerQuery = query.toLowerCase();
+
+        // UI Loading state
+        searchResults.style.display = 'block';
+        if (defaultHomeSections) defaultHomeSections.style.display = 'none';
+
+        resultsList.innerHTML = `
+            <div style="text-align: center; color: #6b7280; padding: 25px; font-size: 14px;">
+                <i class="fa-solid fa-spinner fa-spin" style="color: #4338ca;"></i> Searching sponsored ad index for "${escapeHtml(query)}"...
+            </div>
+        `;
+        if (resultsCount) resultsCount.innerText = '';
+
+        try {
+            let campaigns = [];
+
+            // Query Firestore database
+            if (typeof db !== 'undefined' && db) {
+                const snapshot = await db.collection('ad_campaigns').get();
+                snapshot.forEach(doc => {
+                    campaigns.push({ id: doc.id, ...doc.data() });
+                });
+            } else {
+                console.warn('Firestore instance not found, fallback to sample ads index.');
+                campaigns = getSampleAds();
+            }
+
+            // Keyword Matching Algorithm
+            const matchingAds = campaigns.filter(ad => {
+                const nameMatch = (ad.campaignName || '').toLowerCase().includes(lowerQuery);
+                const descMatch = (ad.adDescription || '').toLowerCase().includes(lowerQuery);
+                const rawKeywordsMatch = (ad.keywordsRaw || '').toLowerCase().includes(lowerQuery);
+
+                let arrayKeywordsMatch = false;
+                if (Array.isArray(ad.keywords)) {
+                    arrayKeywordsMatch = ad.keywords.some(k => k.toLowerCase().includes(lowerQuery) || lowerQuery.includes(k.toLowerCase()));
+                }
+
+                return nameMatch || descMatch || rawKeywordsMatch || arrayKeywordsMatch;
+            });
+
+            // Bidding & Ranking Algorithm (Ranked based on amount paid / budget in FCFA descending)
+            matchingAds.sort((a, b) => {
+                const budgetA = Number(a.budget || 0);
+                const budgetB = Number(b.budget || 0);
+                return budgetB - budgetA;
+            });
+
+            // Render Results
+            renderSearchResults(query, matchingAds);
+
+        } catch (error) {
+            console.error('Search Engine Error:', error);
+            resultsList.innerHTML = `
+                <div style="text-align: center; color: #ef4444; padding: 20px; font-size: 14px;">
+                    Failed to perform search. Please try again.
+                </div>
+            `;
+        }
+    }
+
+    function renderSearchResults(query, ads) {
+        if (!resultsList) return;
+
+        if (resultsCount) {
+            resultsCount.innerText = `${ads.length} Ad${ads.length === 1 ? '' : 's'} Found`;
+        }
+
+        if (ads.length === 0) {
+            resultsList.innerHTML = `
+                <div style="text-align: center; background: #ffffff; border-radius: 16px; padding: 30px 20px; border: 1px dashed #cbd5e1;">
+                    <i class="fa-solid fa-magnifying-glass" style="font-size: 28px; color: #94a3b8; margin-bottom: 10px;"></i>
+                    <h4 style="font-size: 16px; color: #334155; margin-bottom: 5px;">No Sponsored Ads Match "${escapeHtml(query)}"</h4>
+                    <p style="font-size: 13px; color: #64748b; font-weight: 300;">Try searching for other keywords like "tech", "AI", "fintech", or "store".</p>
+                </div>
+            `;
+            return;
+        }
+
+        resultsList.innerHTML = ads.map((ad) => {
+            const keywordsTags = Array.isArray(ad.keywords) && ad.keywords.length > 0
+                ? ad.keywords.map(k => `<span class="ad-keyword-tag">#${escapeHtml(k)}</span>`).join('')
+                : '';
+
+            const targetUrl = ad.targetUrl || '#';
+
+            return `
+                <div class="sponsored-ad-card">
+                    <div class="ad-card-header">
+                        <span class="ad-badge"><i class="fa-solid fa-bolt"></i> Sponsored</span>
+                    </div>
+
+                    <h3 class="ad-title">${escapeHtml(ad.campaignName || 'Sponsored Promotion')}</h3>
+                    <p class="ad-description">${escapeHtml(ad.adDescription || 'Discover top-rated services and products tailored for your search query.')}</p>
+
+                    ${keywordsTags ? `<div class="ad-keywords-list">${keywordsTags}</div>` : ''}
+
+                    <div class="ad-url-bar" style="justify-content: flex-end;">
+                        <a href="${escapeHtml(targetUrl)}" target="_blank" class="ad-url-link" data-ad-id="${ad.id}">
+                            <span>Visit Website</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+}
+
+// --- Navigation Toggle ---
+function initNavigation() {
     const hamburger = document.getElementById('hamburgerMenu');
     const authDropMenu = document.getElementById('authDropMenu');
 
@@ -7,8 +355,10 @@ document.addEventListener('DOMContentLoaded', () => {
             authDropMenu.classList.toggle('open');
         });
     }
+}
 
-    // Firebase Auth State Sync in Top Menu
+// --- Firebase Auth Menu Sync ---
+function initAuthSync() {
     if (typeof firebase !== 'undefined' && firebase.auth) {
         firebase.auth().onAuthStateChanged(user => {
             const navLinksContainer = document.querySelector('.auth-menu .nav-links');
@@ -50,10 +400,34 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+}
 
-    function escapeHtml(str) {
-        return str.replace(/[&<>'"]/g, tag => ({
-            '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
-        }[tag] || tag));
-    }
-});
+// Sample fallback ads index if Firestore offline
+function getSampleAds() {
+    return [
+        {
+            id: 'sample-1',
+            campaignName: 'FinTech West Mobile Banking',
+            keywords: ['fintech', 'banking', 'tech', 'money'],
+            budget: 30000,
+            targetUrl: 'https://example.com/fintech',
+            adDescription: 'Fast, secure mobile payments and instant money transfers across West Africa.',
+            userName: 'Jean-Paul MBIDA'
+        },
+        {
+            id: 'sample-2',
+            campaignName: 'NextGen Quantum AI Tools',
+            keywords: ['tech', 'ai', 'quantum', 'reports'],
+            budget: 20000,
+            targetUrl: 'https://example.com/ai',
+            adDescription: 'Automate analytical insights and dataset processing with cutting-edge AI.',
+            userName: 'TechNova'
+        }
+    ];
+}
+
+function escapeHtml(str) {
+    return str.replace(/[&<>'"]/g, tag => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+    }[tag] || tag));
+}

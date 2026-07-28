@@ -75,10 +75,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 console.log('Account created successfully:', user.email);
 
-                // Redirect to Ads Dashboard
-                const redirectPath = sessionStorage.getItem('redirectAfterLogin') || 'ads-dashboard.html';
+                // Redirect directly to Ads Dashboard
                 sessionStorage.removeItem('redirectAfterLogin');
-                window.location.href = redirectPath;
+                window.location.href = 'ads-dashboard.html';
 
             } catch (error) {
                 console.error('Registration Error:', error.code, error.message);

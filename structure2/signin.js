@@ -46,10 +46,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const userCredential = await auth.signInWithEmailAndPassword(email, password);
                 console.log('Signed in successfully:', userCredential.user.email);
 
-                // Redirect to Ads Dashboard or intended destination
-                const redirectPath = sessionStorage.getItem('redirectAfterLogin') || 'ads-dashboard.html';
+                // Redirect directly to Ads Dashboard
                 sessionStorage.removeItem('redirectAfterLogin');
-                window.location.href = redirectPath;
+                window.location.href = 'ads-dashboard.html';
 
             } catch (error) {
                 console.error('Sign In Error:', error.code, error.message);
