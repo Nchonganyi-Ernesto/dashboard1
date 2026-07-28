@@ -44,11 +44,43 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 // Firebase Sign In Call
                 const userCredential = await auth.signInWithEmailAndPassword(email, password);
-                console.log('Signed in successfully:', userCredential.user.email);
+                const user = userCredential.user;
 
-                // Redirect directly to Ads Dashboard
+                console.log('Firebase Auth authenticated user:', user.email);
+
+                // Pure Firebase Gateway Role Check (Custom Claims or Firestore User Role)
+                const isAdmin = await checkAdminRole(user);
+
+                // Auto-backfill user document in Firestore for pre-existing accounts
+                if (typeof db !== 'undefined' && db && user) {
+                    try {
+                        const userDocRef = db.collection('users').doc(user.uid);
+                        const docSnap = await userDocRef.get();
+                        if (!docSnap.exists) {
+                            await userDocRef.set({
+                                uid: user.uid,
+                                displayName: user.displayName || (user.email ? user.email.split('@')[0] : 'User'),
+                                email: user.email,
+                                role: isAdmin ? 'admin' : 'user',
+                                isAdmin: isAdmin,
+                                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                            });
+                            console.log('Pre-existing user document auto-backfilled in Firestore:', user.email);
+                        }
+                    } catch (e) {
+                        console.warn('Could not auto-backfill user document:', e);
+                    }
+                }
+
                 sessionStorage.removeItem('redirectAfterLogin');
-                window.location.href = 'ads-dashboard.html';
+
+                if (isAdmin) {
+                    console.log('Firebase Gateway: Admin role confirmed. Redirecting to dashboard.html...');
+                    window.location.href = 'dashboard.html';
+                } else {
+                    console.log('Firebase Gateway: Advertiser role confirmed. Redirecting to ads-dashboard.html...');
+                    window.location.href = 'ads-dashboard.html';
+                }
 
             } catch (error) {
                 console.error('Sign In Error:', error.code, error.message);
@@ -89,3 +121,57 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
+async function checkAdminRole(user) {
+    if (!user) return false;
+
+    const userEmail = (user.email || '').toLowerCase();
+
+    // 1. Direct check for admin email address (e.g. admin@google.com)
+    if (userEmail.includes('admin')) {
+        return true;
+    }
+
+    // 2. Check Firebase Auth Token Custom Claims
+    try {
+        const tokenResult = await user.getIdTokenResult();
+        if (tokenResult && tokenResult.claims) {
+            if (tokenResult.claims.admin === true || tokenResult.claims.role === 'admin') {
+                return true;
+            }
+        }
+    } catch (e) {
+        console.warn('Firebase Auth Token claim check:', e);
+    }
+
+    // 3. Check Firestore 'users' collection (by UID or Email query)
+    if (typeof db !== 'undefined' && db) {
+        try {
+            // Check by UID
+            const userDoc = await db.collection('users').doc(user.uid).get();
+            if (userDoc.exists) {
+                const data = userDoc.data();
+                if (data && (data.role === 'admin' || data.isAdmin === true)) {
+                    return true;
+                }
+            }
+
+            // Check by Email query (in case Document ID is auto-generated)
+            const querySnap = await db.collection('users').where('email', '==', user.email).get();
+            if (!querySnap.empty) {
+                let foundAdmin = false;
+                querySnap.forEach(doc => {
+                    const data = doc.data();
+                    if (data && (data.role === 'admin' || data.isAdmin === true)) {
+                        foundAdmin = true;
+                    }
+                });
+                if (foundAdmin) return true;
+            }
+        } catch (e) {
+            console.warn('Firestore user role check:', e);
+        }
+    }
+
+    return false;
+}

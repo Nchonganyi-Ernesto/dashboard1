@@ -117,14 +117,12 @@ function renderChannelChart() {
         svg.appendChild(line);
 
         // Label position (% of wrap dimensions 280x220, mapped to px)
-        // Convert SVG coords → percentage of wrap element (280w × 220h)
         const lx = x2 / 280 * 100;
         const ly = y2 / 220 * 100;
 
         const label = document.createElement('div');
         label.className = 'channel-label';
 
-        // Offset the label slightly away from the line tip
         const offsetX = Math.cos(rad) >= 0 ? 1 : -1;
         const offsetY = Math.sin(rad) >= 0 ? 1 : -1;
 
@@ -212,6 +210,183 @@ function initHamburger() {
 
 
 // ============================================================
+//  REAL-TIME TOTAL USERS TRACKER (EXCLUDING ADMIN)
+// ============================================================
+function initRealtimeUsersTracker() {
+    if (typeof firebase === 'undefined' || !firebase.firestore) return;
+
+    const dbInstance = firebase.firestore();
+    const usersValEl = document.getElementById('totalUsersCount');
+    if (!usersValEl) return;
+
+    // Real-time listener for 'users' collection
+    dbInstance.collection('users').onSnapshot(snapshot => {
+        const uniqueUserIds = new Set();
+
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            const email = (data.email || '').toLowerCase();
+            const isAdmin = data.role === 'admin' || data.isAdmin === true || email.includes('admin');
+
+            // Exclude Admin accounts
+            if (!isAdmin) {
+                uniqueUserIds.add(data.uid || doc.id);
+            }
+        });
+
+        // Also check ad_campaigns for registered user IDs
+        dbInstance.collection('ad_campaigns').get().then(campaignSnap => {
+            campaignSnap.forEach(cdoc => {
+                const cdata = cdoc.data();
+                const cEmail = (cdata.userEmail || '').toLowerCase();
+                const isCAdmin = cdata.role === 'admin' || cEmail.includes('admin');
+
+                if (!isCAdmin && cdata.userId) {
+                    uniqueUserIds.add(cdata.userId);
+                }
+            });
+
+            const count = uniqueUserIds.size;
+            usersValEl.innerText = count >= 1000 ? (count / 1000).toFixed(1) + 'K' : count;
+            console.log(`Real-Time Total Users (Excluding Admin): ${count}`);
+        }).catch(() => {
+            const count = uniqueUserIds.size;
+            usersValEl.innerText = count >= 1000 ? (count / 1000).toFixed(1) + 'K' : count;
+        });
+
+    }, error => {
+        console.error('Error listening to users collection:', error);
+    });
+}
+
+
+// ============================================================
+//  REAL-TIME AD CLICKS & CTR TRACKER
+// ============================================================
+function initRealtimeClicksTracker() {
+    if (typeof firebase === 'undefined' || !firebase.firestore) return;
+
+    const dbInstance = firebase.firestore();
+    const clicksValEl = document.getElementById('adminTotalClicks');
+    const ctrValEl = document.getElementById('adminCTRVal');
+
+    if (!clicksValEl) return;
+
+    // Real-time listener for ad_campaigns collection clicks
+    dbInstance.collection('ad_campaigns').onSnapshot(snapshot => {
+        let totalClicks = 0;
+        let totalImpressions = 0;
+
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            totalClicks += Number(data.clicks || 0);
+            totalImpressions += Number(data.impressions || 0);
+        });
+
+        // Render Clicks KPI
+        clicksValEl.innerText = totalClicks >= 1000 ? (totalClicks / 1000).toFixed(1) + 'K' : totalClicks;
+
+        // Render CTR KPI
+        if (ctrValEl) {
+            const ctr = totalImpressions > 0 
+                ? ((totalClicks / totalImpressions) * 100).toFixed(2) 
+                : (totalClicks > 0 ? '100.00' : '0.00');
+            ctrValEl.innerText = `${ctr}%`;
+        }
+
+        console.log(`Real-Time Admin Clicks Update: ${totalClicks} total clicks`);
+    }, error => {
+        console.error('Error listening to ad_campaigns for clicks:', error);
+    });
+}
+
+
+// ============================================================
+//  REAL-TIME FIRESTORE SESSIONS, PURCHASES & REVENUE TRACKER
+// ============================================================
+function initRealtimeSessionsAndPurchasesTracker() {
+    if (typeof firebase === 'undefined' || !firebase.firestore) return;
+
+    const dbInstance = firebase.firestore();
+    const sessionsValEl = document.getElementById('totalSessionsCount');
+    const avgTimeValEl = document.getElementById('avgEngagementTime');
+    const purchaseRateValEl = document.getElementById('purchaseRateVal');
+    const totalPurchasesValEl = document.getElementById('totalPurchasesVal');
+    const totalRevenueValEl = document.getElementById('totalRevenueVal');
+
+    let currentSessionsCount = 0;
+    let currentPurchasesCount = 0;
+
+    function updatePurchaseRate() {
+        if (purchaseRateValEl) {
+            const rate = currentSessionsCount > 0 
+                ? ((currentPurchasesCount / currentSessionsCount) * 100).toFixed(2) 
+                : '0.00';
+            purchaseRateValEl.innerText = `${rate}%`;
+        }
+    }
+
+    // 1. Listen to site_sessions collection
+    dbInstance.collection('site_sessions').onSnapshot(snapshot => {
+        currentSessionsCount = snapshot.docs.length;
+        let totalDurationSeconds = 0;
+
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            totalDurationSeconds += Number(data.durationSeconds || 0);
+        });
+
+        const avgSeconds = currentSessionsCount > 0 ? Math.round(totalDurationSeconds / currentSessionsCount) : 0;
+        const formattedAvgTime = formatSecondsToHHMMSS(avgSeconds);
+
+        if (sessionsValEl) {
+            sessionsValEl.innerText = currentSessionsCount >= 1000 ? (currentSessionsCount / 1000).toFixed(1) + 'K' : currentSessionsCount;
+        }
+
+        if (avgTimeValEl) {
+            avgTimeValEl.innerText = formattedAvgTime;
+        }
+
+        updatePurchaseRate();
+    }, error => {
+        console.error('Error listening to site_sessions:', error);
+    });
+
+    // 2. Listen to site_purchases collection
+    dbInstance.collection('site_purchases').onSnapshot(snapshot => {
+        currentPurchasesCount = snapshot.docs.length;
+        let totalRevenue = 0;
+
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            totalRevenue += Number(data.amountFCFA || 0);
+        });
+
+        if (totalPurchasesValEl) {
+            totalPurchasesValEl.innerText = currentPurchasesCount >= 1000 ? (currentPurchasesCount / 1000).toFixed(1) + 'K' : currentPurchasesCount;
+        }
+
+        if (totalRevenueValEl) {
+            totalRevenueValEl.innerText = totalRevenue.toLocaleString('en-US') + ' FCFA';
+        }
+
+        updatePurchaseRate();
+    }, error => {
+        console.error('Error listening to site_purchases:', error);
+    });
+}
+
+function formatSecondsToHHMMSS(totalSeconds) {
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    const pad = num => String(num).padStart(2, '0');
+    return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+}
+
+
+// ============================================================
 //  INIT
 // ============================================================
 document.addEventListener('DOMContentLoaded', function () {
@@ -236,4 +411,18 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     initHamburger();
+    initRealtimeUsersTracker();
+    initRealtimeClicksTracker();
+    initRealtimeSessionsAndPurchasesTracker();
+
+    const adminSignOutBtn = document.getElementById('adminSignOutBtn');
+    if (adminSignOutBtn) {
+        adminSignOutBtn.addEventListener('click', function () {
+            if (typeof firebase !== 'undefined' && firebase.auth) {
+                firebase.auth().signOut().then(() => {
+                    window.location.href = 'signin.html';
+                });
+            }
+        });
+    }
 });

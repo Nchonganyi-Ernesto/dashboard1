@@ -27,7 +27,7 @@
         <nav class="header-nav" id="header-nav">
             <button class="nav-tab active">Overview</button>
             <button class="nav-tab">Dynamics</button>
-            <button class="nav-tab setup-btn">Setup dashboard</button>
+            <button class="nav-tab setup-btn" id="adminSignOutBtn" style="background: #ef4444; border-color: #ef4444; color: #ffffff; cursor: pointer;">Sign Out</button>
         </nav>
     </header>
 
@@ -36,27 +36,27 @@
             <div class="kpi-grid">
                 <div class="kpi-card kpi-purple">
                     <div class="kpi-label">Total users</div>
-                    <div class="kpi-value">4.4K</div>
+                    <div class="kpi-value" id="totalUsersCount">0</div>
                 </div>
                 <div class="kpi-card kpi-navy">
                     <div class="kpi-label">Sessions</div>
-                    <div class="kpi-value">5.4K</div>
+                    <div class="kpi-value" id="totalSessionsCount">0</div>
                 </div>
                 <div class="kpi-card kpi-blue">
                     <div class="kpi-label">Avg engmt time</div>
-                    <div class="kpi-value">00:00:44</div>
+                    <div class="kpi-value" id="avgEngagementTime">00:00:00</div>
                 </div>
                 <div class="kpi-card kpi-teal">
                     <div class="kpi-label">Purchase rate</div>
-                    <div class="kpi-value">18.60%</div>
+                    <div class="kpi-value" id="purchaseRateVal">0%</div>
                 </div>
                 <div class="kpi-card kpi-pink">
                     <div class="kpi-label">Purchases</div>
-                    <div class="kpi-value">813</div>
+                    <div class="kpi-value" id="totalPurchasesVal">0</div>
                 </div>
                 <div class="kpi-card kpi-violet">
                     <div class="kpi-label">Revenue</div>
-                    <div class="kpi-value">2.8K</div>
+                    <div class="kpi-value" id="totalRevenueVal">0 FCFA</div>
                 </div>
                 <div class="kpi-card kpi-purple">
                     <div class="kpi-label">Impressions</div>
@@ -64,11 +64,11 @@
                 </div>
                 <div class="kpi-card kpi-navy">
                     <div class="kpi-label">Clicks</div>
-                    <div class="kpi-value">5.5K</div>
+                    <div class="kpi-value" id="adminTotalClicks">0</div>
                 </div>
                 <div class="kpi-card kpi-blue">
                     <div class="kpi-label">CTR</div>
-                    <div class="kpi-value">1.22%</div>
+                    <div class="kpi-value" id="adminCTRVal">0.00%</div>
                 </div>
                 <div class="kpi-card kpi-teal">
                     <div class="kpi-label">CPM</div>
@@ -385,10 +385,12 @@
         </aside>
     </div>
 
-    <footer class="bottom-banner">
-        <span>Connect 70+ data sources with Coupler.io</span>
-    </footer>
-
+    <!-- Firebase SDK, Auth Guard & Config -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="auth-guard.js"></script>
     <script src="dashboard.js"></script>
 </body>
 </html>

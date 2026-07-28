@@ -143,7 +143,11 @@ async function loadTrendingHighestPaidAds() {
         }
 
         trendingGrid.innerHTML = topAds.map(ad => {
-            const targetUrl = ad.targetUrl || '#';
+            let targetUrl = ad.targetUrl || '#';
+            if (targetUrl !== '#' && ad.id) {
+                const sep = targetUrl.includes('?') ? '&' : '?';
+                targetUrl = targetUrl + sep + 'campaign_id=' + encodeURIComponent(ad.id);
+            }
             return `
                 <div class="card trending-ad-card" data-url="${escapeHtml(targetUrl)}" data-ad-id="${ad.id}">
                     <div class="card-top">
@@ -320,7 +324,11 @@ function initSearchEngine() {
                 ? ad.keywords.map(k => `<span class="ad-keyword-tag">#${escapeHtml(k)}</span>`).join('')
                 : '';
 
-            const targetUrl = ad.targetUrl || '#';
+            let targetUrl = ad.targetUrl || '#';
+            if (targetUrl !== '#' && ad.id) {
+                const sep = targetUrl.includes('?') ? '&' : '?';
+                targetUrl = targetUrl + sep + 'campaign_id=' + encodeURIComponent(ad.id);
+            }
 
             return `
                 <div class="sponsored-ad-card">

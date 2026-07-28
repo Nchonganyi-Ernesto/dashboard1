@@ -73,6 +73,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 }
 
+                // Write User Record to Firestore 'users' collection
+                if (typeof db !== 'undefined' && db) {
+                    try {
+                        await db.collection('users').doc(user.uid).set({
+                            uid: user.uid,
+                            displayName: fullName || email.split('@')[0],
+                            email: email,
+                            role: 'user',
+                            isAdmin: false,
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    } catch (e) {
+                        console.warn('Could not store user record in Firestore:', e);
+                    }
+                }
+
                 console.log('Account created successfully:', user.email);
 
                 // Redirect directly to Ads Dashboard
