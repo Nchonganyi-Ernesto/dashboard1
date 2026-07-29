@@ -9,7 +9,47 @@ document.addEventListener('DOMContentLoaded', () => {
     initGlobalClickTracker();
     initRecentSearchesFeed();
     loadTrendingHighestPaidAds();
+    initHomepageSessionTracker();
 });
+
+// --- User Session & Ad Click Tracker ---
+let currentSessionDocId = null;
+
+function initHomepageSessionTracker() {
+    if (typeof db === 'undefined' || !db) return;
+
+    // Check if session ID already exists in sessionStorage for this user session
+    const existingSessionId = sessionStorage.getItem('ksearch_session_id');
+
+    if (existingSessionId) {
+        currentSessionDocId = existingSessionId;
+        console.log('Reusing existing session ID:', currentSessionDocId);
+    } else {
+        // 1. Create exactly 1 session document on homepage load
+        db.collection('site_sessions').add({
+            type: 'site_session',
+            durationSeconds: 0, // Duration measured only when user visits ad website
+            visitedAd: false,
+            createdAt: (typeof firebase !== 'undefined' && firebase.firestore && firebase.firestore.FieldValue.serverTimestamp) 
+                ? firebase.firestore.FieldValue.serverTimestamp() 
+                : new Date()
+        }).then(docRef => {
+            currentSessionDocId = docRef.id;
+            sessionStorage.setItem('ksearch_session_id', docRef.id);
+            console.log('Recorded new session in site_sessions with ID:', currentSessionDocId);
+        }).catch(err => {
+            console.error('Error creating session:', err);
+        });
+    }
+
+    // Sync ad website duration when window unloads or tab changes
+    window.addEventListener('beforeunload', syncAdVisitDuration);
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') {
+            syncAdVisitDuration();
+        }
+    });
+}
 
 // --- Recent Searches Feed (User Search History) ---
 function initRecentSearchesFeed() {
@@ -87,6 +127,49 @@ function renderRecentSearchesFeed() {
     });
 }
 
+function handleAdClick(adId) {
+    if (!adId || typeof db === 'undefined' || !db) return;
+
+    // 1. Record Click (+1 in ad_campaigns)
+    db.collection('ad_campaigns').doc(adId).update({
+        clicks: firebase.firestore.FieldValue.increment(1)
+    }).then(() => {
+        console.log('Firestore click count incremented for ad campaign:', adId);
+    }).catch(err => {
+        console.error('Error updating click count in Firestore:', err);
+    });
+
+    // 2. DO NOT create another session (same user)
+    // 3. Measure duration only when user visits the ad website
+    const adClickTime = Date.now();
+    sessionStorage.setItem('ad_visit_start_time', adClickTime.toString());
+    sessionStorage.setItem('ad_visited_id', adId);
+
+    // Update existing session document with ad visit duration
+    syncAdVisitDuration();
+}
+
+function syncAdVisitDuration() {
+    const sessionId = currentSessionDocId || sessionStorage.getItem('ksearch_session_id');
+    const adVisitStartTime = sessionStorage.getItem('ad_visit_start_time');
+    const adId = sessionStorage.getItem('ad_visited_id');
+
+    if (!sessionId || !adVisitStartTime || typeof db === 'undefined' || !db) return;
+
+    // Calculate elapsed time spent visiting ad website (minimum 15s to 120s)
+    const elapsedSeconds = Math.max(15, Math.round((Date.now() - Number(adVisitStartTime)) / 1000));
+
+    db.collection('site_sessions').doc(sessionId).update({
+        durationSeconds: elapsedSeconds,
+        visitedAd: true,
+        adId: adId || null
+    }).then(() => {
+        console.log(`Updated ad visit session duration: ${elapsedSeconds}s for session ${sessionId}`);
+    }).catch(err => {
+        console.warn('Failed to update ad visit duration:', err);
+    });
+}
+
 // --- Global Click Tracker for All Sponsored Ad Links & Cards ---
 function initGlobalClickTracker() {
     document.addEventListener('click', function (e) {
@@ -94,15 +177,8 @@ function initGlobalClickTracker() {
         const adLink = e.target.closest('.ad-url-link');
         if (adLink) {
             const adId = adLink.getAttribute('data-ad-id');
-            if (adId && typeof db !== 'undefined' && db) {
-                console.log('Recording website click for campaign ID:', adId);
-                db.collection('ad_campaigns').doc(adId).update({
-                    clicks: firebase.firestore.FieldValue.increment(1)
-                }).then(() => {
-                    console.log('Firestore click count successfully incremented for campaign:', adId);
-                }).catch(err => {
-                    console.error('Error updating click count in Firestore:', err);
-                });
+            if (adId) {
+                handleAdClick(adId);
             }
         }
     });
@@ -167,10 +243,8 @@ async function loadTrendingHighestPaidAds() {
                 const adId = this.getAttribute('data-ad-id');
                 const url = this.getAttribute('data-url');
 
-                if (adId && typeof db !== 'undefined' && db) {
-                    db.collection('ad_campaigns').doc(adId).update({
-                        clicks: firebase.firestore.FieldValue.increment(1)
-                    }).catch(err => console.error('Error tracking click:', err));
+                if (adId) {
+                    handleAdClick(adId);
                 }
 
                 if (url && url !== '#') {
