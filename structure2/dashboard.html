@@ -22,6 +22,7 @@
                 <div class="header-title">Google Analytics PPC Dashboard</div>
                 <div class="header-subtitle">COUPLER.IO</div>
             </div>
+            
         </div>
 
         <nav class="header-nav" id="header-nav">
@@ -60,7 +61,7 @@
                 </div>
                 <div class="kpi-card kpi-purple">
                     <div class="kpi-label">Impressions</div>
-                    <div class="kpi-value">453.8K</div>
+                    <div class="kpi-value" id="adminTotalImpressions">0</div>
                 </div>
                 <div class="kpi-card kpi-navy">
                     <div class="kpi-label">Clicks</div>
@@ -72,15 +73,15 @@
                 </div>
                 <div class="kpi-card kpi-teal">
                     <div class="kpi-label">CPM</div>
-                    <div class="kpi-value">3.30</div>
+                    <div class="kpi-value" id="adminCPMVal">0.00</div>
                 </div>
                 <div class="kpi-card kpi-pink">
                     <div class="kpi-label">CPC</div>
-                    <div class="kpi-value">0.27</div>
+                    <div class="kpi-value" id="adminCPCVal">0.00</div>
                 </div>
                 <div class="kpi-card kpi-violet">
                     <div class="kpi-label">ROAS</div>
-                    <div class="kpi-value">185.38%</div>
+                    <div class="kpi-value" id="adminROASVal">0.00%</div>
                 </div>
             </div>
 
@@ -193,7 +194,7 @@
                                 <th>CTR</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="adminAdSourceTableBody">
                             <tr>
                                 <td class="col-source"><span class="expand-icon">+</span>Bing ads</td>
                                 <td><span class="cell-pill pill-purple-4">224</span></td>

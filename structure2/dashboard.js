@@ -2,15 +2,13 @@
 //  DASHBOARD DATA  — edit these objects to change the charts
 // ============================================================
 
-// Traffic by channel  (values must sum to 100)
+// Traffic by channel  (values sum to 100)
 const channelData = [
-    { label: 'linkedin',     value: 16.63, color: '#1a3a6b' },
-    { label: 'bing ads',     value: 16.08, color: '#17b8b0' },
-    { label: 'snapchat ads', value: 15.42, color: '#7c5cd0' },
-    { label: 'facebook',     value: 14.96, color: '#e0508f' },
-    { label: 'tiktok',       value: 14.66, color: '#f2795a' },
-    { label: 'twitter ads',  value: 14.48, color: '#4fc3f7' },
-    { label: 'google ads',   value:  7.76, color: '#4ade80' },
+    { label: 'direct search',   value: 35.00, color: '#1a3a6b' },
+    { label: 'desktop search',  value: 25.00, color: '#17b8b0' },
+    { label: 'trending ad',     value: 20.00, color: '#7c5cd0' },
+    { label: 'mobile search',   value: 12.00, color: '#f2795a' },
+    { label: 'category tags',   value:  8.00, color: '#4ade80' },
 ];
 
 // Ad platforms shared by both bar charts
@@ -69,20 +67,22 @@ const cpcData = {
 // ============================================================
 //  RENDER — Traffic by Channel (donut + SVG lines + labels)
 // ============================================================
-function renderChannelChart() {
+function renderChannelChart(customData) {
     const wrap  = document.getElementById('channel-chart-wrap');
     const donut = document.getElementById('channel-donut');
     const svg   = document.getElementById('channel-lines');
     if (!wrap || !donut || !svg) return;
 
+    const dataToRender = customData || channelData;
+
     // --- conic-gradient ---
     let gradient = '';
     let cumulative = 0;
-    channelData.forEach((seg, i) => {
+    dataToRender.forEach((seg, i) => {
         const start = cumulative;
         const end   = cumulative + seg.value;
         gradient += `${seg.color} ${start}% ${end}%`;
-        if (i < channelData.length - 1) gradient += ', ';
+        if (i < dataToRender.length - 1) gradient += ', ';
         cumulative = end;
     });
     donut.style.background = `conic-gradient(${gradient})`;
@@ -98,7 +98,7 @@ function renderChannelChart() {
     wrap.querySelectorAll('.channel-label').forEach(el => el.remove());
 
     let angle = 0;
-    channelData.forEach(seg => {
+    dataToRender.forEach(seg => {
         const midAngle = angle + seg.value / 2;
         const rad = (midAngle / 100) * 2 * Math.PI - Math.PI / 2;
 
@@ -135,6 +135,62 @@ function renderChannelChart() {
 
         wrap.appendChild(label);
         angle += seg.value;
+    });
+}
+
+// ============================================================
+//  REAL-TIME SEARCH EVENTS CHANNEL TRACKER
+// ============================================================
+function initRealtimeChannelTracker() {
+    if (typeof firebase === 'undefined' || !firebase.firestore) return;
+
+    const dbInstance = firebase.firestore();
+
+    dbInstance.collection('search_events').onSnapshot(snapshot => {
+        if (snapshot.empty) {
+            renderChannelChart(channelData);
+            return;
+        }
+
+        const counts = {
+            direct_search: 0,
+            trending_insights: 0,
+            mobile_search: 0,
+            desktop_search: 0,
+            category_tag: 0
+        };
+
+        let total = 0;
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            const ch = data.channel || 'direct_search';
+            const dev = data.device || 'desktop';
+
+            if (ch === 'direct_search') counts.direct_search++;
+            else if (ch === 'trending_insights') counts.trending_insights++;
+            else if (ch === 'category_tag') counts.category_tag++;
+            else counts.direct_search++;
+
+            if (dev === 'mobile') counts.mobile_search++;
+            else counts.desktop_search++;
+
+            total += 2; // channel + device
+        });
+
+        if (total === 0) return;
+
+        const liveChannelData = [
+            { label: 'direct search',   value: (counts.direct_search / total) * 100,   color: '#1a3a6b' },
+            { label: 'trending ad',     value: (counts.trending_insights / total) * 100, color: '#7c5cd0' },
+            { label: 'mobile search',   value: (counts.mobile_search / total) * 100,   color: '#f2795a' },
+            { label: 'desktop search',  value: (counts.desktop_search / total) * 100,  color: '#17b8b0' },
+            { label: 'category tags',   value: (counts.category_tag / total) * 100,    color: '#4ade80' },
+        ].filter(seg => seg.value > 0);
+
+        renderChannelChart(liveChannelData);
+        console.log('Real-Time Channel Donut Chart updated with live search events!');
+    }, err => {
+        console.error('Error listening to search_events:', err);
     });
 }
 
@@ -260,43 +316,131 @@ function initRealtimeUsersTracker() {
 }
 
 
+// Global state variables for ROAS real-time sync
+let currentTotalRevenue = 0;
+let currentAdDeliveredCost = 0;
+
+function updateROAS() {
+    const roasValEl = document.getElementById('adminROASVal');
+    if (!roasValEl) return;
+
+    if (currentAdDeliveredCost > 0) {
+        const roas = ((currentTotalRevenue / currentAdDeliveredCost) * 100).toFixed(2);
+        roasValEl.innerText = `${roas}%`;
+    } else {
+        roasValEl.innerText = currentTotalRevenue > 0 ? '100.00%' : '0.00%';
+    }
+}
+
 // ============================================================
-//  REAL-TIME AD CLICKS & CTR TRACKER
+//  REAL-TIME AD IMPRESSIONS, CLICKS, CTR, CPM & CPC TRACKER
 // ============================================================
-function initRealtimeClicksTracker() {
+function initRealtimeAdMetricsTracker() {
     if (typeof firebase === 'undefined' || !firebase.firestore) return;
 
     const dbInstance = firebase.firestore();
+    const impressionsValEl = document.getElementById('adminTotalImpressions');
     const clicksValEl = document.getElementById('adminTotalClicks');
     const ctrValEl = document.getElementById('adminCTRVal');
+    const cpmValEl = document.getElementById('adminCPMVal');
+    const cpcValEl = document.getElementById('adminCPCVal');
+    const tableBodyEl = document.getElementById('adminAdSourceTableBody');
 
-    if (!clicksValEl) return;
-
-    // Real-time listener for ad_campaigns collection clicks
+    // Real-time listener for ad_campaigns collection
     dbInstance.collection('ad_campaigns').onSnapshot(snapshot => {
         let totalClicks = 0;
         let totalImpressions = 0;
+        let totalSpend = 0;
+        const campaigns = [];
 
         snapshot.forEach(doc => {
             const data = doc.data();
-            totalClicks += Number(data.clicks || 0);
-            totalImpressions += Number(data.impressions || 0);
+            const impressions = Number(data.impressions || 0);
+            const clicks = Number(data.clicks || 0);
+            const budget = Number(data.budget || 0);
+
+            totalImpressions += impressions;
+            totalClicks += clicks;
+            totalSpend += budget;
+
+            campaigns.push({
+                id: doc.id,
+                name: data.campaignName || 'Untitled Campaign',
+                budget: budget,
+                impressions: impressions,
+                clicks: clicks
+            });
         });
 
-        // Render Clicks KPI
-        clicksValEl.innerText = totalClicks >= 1000 ? (totalClicks / 1000).toFixed(1) + 'K' : totalClicks;
-
-        // Render CTR KPI
-        if (ctrValEl) {
-            const ctr = totalImpressions > 0 
-                ? ((totalClicks / totalImpressions) * 100).toFixed(2) 
-                : (totalClicks > 0 ? '100.00' : '0.00');
-            ctrValEl.innerText = `${ctr}%`;
+        // 1. Render Impressions KPI
+        if (impressionsValEl) {
+            impressionsValEl.innerText = totalImpressions >= 1000 
+                ? (totalImpressions / 1000).toFixed(1) + 'K' 
+                : totalImpressions;
         }
 
-        console.log(`Real-Time Admin Clicks Update: ${totalClicks} total clicks`);
+        // 2. Render Clicks KPI
+        if (clicksValEl) {
+            clicksValEl.innerText = totalClicks >= 1000 
+                ? (totalClicks / 1000).toFixed(1) + 'K' 
+                : totalClicks;
+        }
+
+        // 3. Render CTR KPI
+        if (ctrValEl) {
+            let rawCtr = totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0;
+            if (rawCtr > 100) rawCtr = 100; // Cap at 100% for realistic metrics
+            ctrValEl.innerText = `${rawCtr.toFixed(2)}%`;
+        }
+
+        // 4. Dynamic Impression Cost KPI based on live database impressions (500 FCFA per 1,000 impressions = 0.5 FCFA per view)
+        const impressionCost = totalImpressions * 0.5;
+
+        if (cpmValEl) {
+            cpmValEl.innerText = `${impressionCost.toFixed(2)} FCFA`;
+        }
+
+        // 5. Dynamic CPC KPI based on live database clicks (300 FCFA per click)
+        const clickCost = totalClicks * 300;
+
+        if (cpcValEl) {
+            cpcValEl.innerText = `${clickCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} FCFA`;
+        }
+
+        // Update delivered ad cost for ROAS
+        currentAdDeliveredCost = impressionCost + clickCost;
+        updateROAS();
+
+        // 6. Render Real-Time Ad Source Data Table
+        if (tableBodyEl && campaigns.length > 0) {
+            tableBodyEl.innerHTML = campaigns.map(c => {
+                const campaignImpressionCost = (c.impressions || 0) * 0.5;
+                const campaignClickCost = (c.clicks || 0) * 300;
+                const cpc = `${campaignClickCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} FCFA`;
+                const cpm = `${campaignImpressionCost.toFixed(2)} FCFA`;
+                let rowCtrRaw = c.impressions > 0 ? (c.clicks / c.impressions) * 100 : 0;
+                if (rowCtrRaw > 100) rowCtrRaw = 100;
+                const ctr = `${rowCtrRaw.toFixed(2)}%`;
+                const impFormatted = c.impressions >= 1000 ? (c.impressions / 1000).toFixed(1) + 'K' : c.impressions;
+                const clicksFormatted = c.clicks >= 1000 ? (c.clicks / 1000).toFixed(1) + 'K' : c.clicks;
+
+                return `
+                    <tr>
+                        <td class="col-source"><span class="expand-icon">+</span>${escapeHtml(c.name)}</td>
+                        <td><span class="cell-pill pill-purple-4">${c.budget.toLocaleString()}</span></td>
+                        <td><span class="cell-pill pill-blue-3">${impFormatted}</span></td>
+                        <td><span class="cell-pill pill-green-3">${clicksFormatted}</span></td>
+                        <td><span class="cell-pill pill-gray-1">${cpc}</span></td>
+                        <td><span class="cell-pill pill-pink-3">${cpm}</span></td>
+                        <td><span class="cell-pill pill-teal-2">${ctr}</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        console.log(`Real-Time Admin Ad Metrics Updated: ${totalImpressions} impressions, ${totalClicks} clicks`);
     }, error => {
-        console.error('Error listening to ad_campaigns for clicks:', error);
+        console.error('Error listening to ad_campaigns for ad metrics:', error);
     });
 }
 
@@ -362,6 +506,8 @@ function initRealtimeSessionsAndPurchasesTracker() {
             totalRevenue += Number(data.amountFCFA || 0);
         });
 
+        currentTotalRevenue = totalRevenue;
+
         if (totalPurchasesValEl) {
             totalPurchasesValEl.innerText = currentPurchasesCount >= 1000 ? (currentPurchasesCount / 1000).toFixed(1) + 'K' : currentPurchasesCount;
         }
@@ -371,6 +517,7 @@ function initRealtimeSessionsAndPurchasesTracker() {
         }
 
         updatePurchaseRate();
+        updateROAS();
     }, error => {
         console.error('Error listening to site_purchases:', error);
     });
@@ -412,8 +559,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     initHamburger();
     initRealtimeUsersTracker();
-    initRealtimeClicksTracker();
+    initRealtimeAdMetricsTracker();
     initRealtimeSessionsAndPurchasesTracker();
+    initRealtimeChannelTracker();
 
     const adminSignOutBtn = document.getElementById('adminSignOutBtn');
     if (adminSignOutBtn) {

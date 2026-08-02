@@ -120,7 +120,7 @@ function renderRecentSearchesFeed() {
             if (query && searchInput) {
                 searchInput.value = query;
                 if (typeof window.triggerHomeSearch === 'function') {
-                    window.triggerHomeSearch(query);
+                    window.triggerHomeSearch(query, 'recent_chip');
                 }
             }
         });
@@ -203,8 +203,17 @@ async function loadTrendingHighestPaidAds() {
             campaigns = getSampleAds();
         }
 
-        // Sort descending by budget (highest paid first)
-        campaigns.sort((a, b) => Number(b.budget || 0) - Number(a.budget || 0));
+        // Sort descending by budget (highest paid first); Tie-breaker = first submitted wins
+        campaigns.sort((a, b) => {
+            const budgetA = Number(a.budget || 0);
+            const budgetB = Number(b.budget || 0);
+            const budgetDiff = budgetB - budgetA;
+            if (budgetDiff !== 0) return budgetDiff;
+
+            const timeA = a.createdAt ? (a.createdAt.seconds || (a.createdAt.getTime ? a.createdAt.getTime() / 1000 : 0)) : 0;
+            const timeB = b.createdAt ? (b.createdAt.seconds || (b.createdAt.getTime ? b.createdAt.getTime() / 1000 : 0)) : 0;
+            return timeA - timeB;
+        });
 
         // Take top 2 highest paid ads
         const topAds = campaigns.slice(0, 2);
@@ -258,6 +267,52 @@ async function loadTrendingHighestPaidAds() {
     }
 }
 
+// --- Record Real-Time Search-Only Impression Count in Firestore ---
+const recordedSearchImpressions = new Set();
+
+function recordAdImpressions(ads, searchQuery) {
+    if (!ads || !Array.isArray(ads) || typeof db === 'undefined' || !db) return;
+
+    const cleanQuery = (searchQuery || '').trim().toLowerCase();
+
+    ads.forEach(ad => {
+        if (!ad || !ad.id || (typeof ad.id === 'string' && ad.id.startsWith('sample-'))) return;
+
+        // Ensure 1 impression per ad campaign per search query per user session
+        const key = `${cleanQuery}_${ad.id}`;
+        if (recordedSearchImpressions.has(key)) return;
+        recordedSearchImpressions.add(key);
+
+        db.collection('ad_campaigns').doc(ad.id).update({
+            impressions: firebase.firestore.FieldValue.increment(1)
+        }).then(() => {
+            console.log(`Real-time search impression recorded for search "${cleanQuery}" on campaign: ${ad.id}`);
+        }).catch(err => {
+            console.warn('Error updating impression count in Firestore:', err);
+        });
+    });
+}
+
+// --- Search Event Logging for Real-Time Channel Analytics ---
+function logSearchEvent(sourceType) {
+    if (typeof db === 'undefined' || !db) return;
+
+    const isMobile = window.innerWidth < 768;
+    const channelName = sourceType || 'direct_search';
+
+    db.collection('search_events').add({
+        channel: channelName,
+        device: isMobile ? 'mobile' : 'desktop',
+        createdAt: (typeof firebase !== 'undefined' && firebase.firestore && firebase.firestore.FieldValue.serverTimestamp)
+            ? firebase.firestore.FieldValue.serverTimestamp()
+            : new Date()
+    }).then(() => {
+        console.log(`Log search event (${channelName}, ${isMobile ? 'mobile' : 'desktop'}) recorded in Firestore.`);
+    }).catch(err => {
+        console.warn('Error logging search event:', err);
+    });
+}
+
 // --- Search Engine Keyword Matching & Bidding Rank Logic ---
 function initSearchEngine() {
     const searchInput = document.getElementById('searchInput');
@@ -271,21 +326,21 @@ function initSearchEngine() {
 
     if (!searchInput || !searchBtn) return;
 
-    window.triggerHomeSearch = function(query) {
-        performSearch(query);
+    window.triggerHomeSearch = function(query, source = 'direct_search') {
+        performSearch(query, source);
     };
 
     // Search button click
     searchBtn.addEventListener('click', () => {
         const query = searchInput.value.trim();
-        if (query) performSearch(query);
+        if (query) performSearch(query, 'direct_search');
     });
 
     // Enter key press in search bar
     searchInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
             const query = searchInput.value.trim();
-            if (query) performSearch(query);
+            if (query) performSearch(query, 'direct_search');
         }
     });
 
@@ -303,13 +358,16 @@ function initSearchEngine() {
         tag.addEventListener('click', function () {
             const tagQuery = this.innerText.toLowerCase().trim();
             searchInput.value = tagQuery;
-            performSearch(tagQuery);
+            performSearch(tagQuery, 'category_tag');
         });
     });
 
     // Search execution function
-    async function performSearch(query) {
+    async function performSearch(query, source = 'direct_search') {
         if (!query) return;
+
+        // Log search event to Firestore for real-time channel analytics
+        logSearchEvent(source);
 
         // Save to Recent Searches Feed History
         saveRecentSearch(query);
@@ -355,11 +413,17 @@ function initSearchEngine() {
                 return nameMatch || descMatch || rawKeywordsMatch || arrayKeywordsMatch;
             });
 
-            // Bidding & Ranking Algorithm (Ranked based on amount paid / budget in FCFA descending)
+            // Bidding & Ranking Algorithm: Primary sort = budget descending; Tie-breaker = first submitted wins (oldest createdAt first)
             matchingAds.sort((a, b) => {
                 const budgetA = Number(a.budget || 0);
                 const budgetB = Number(b.budget || 0);
-                return budgetB - budgetA;
+                const budgetDiff = budgetB - budgetA;
+                if (budgetDiff !== 0) return budgetDiff;
+
+                // Tie-breaker for equal budget: First submitted ad wins (earliest timestamp first)
+                const timeA = a.createdAt ? (a.createdAt.seconds || (a.createdAt.getTime ? a.createdAt.getTime() / 1000 : 0)) : 0;
+                const timeB = b.createdAt ? (b.createdAt.seconds || (b.createdAt.getTime ? b.createdAt.getTime() / 1000 : 0)) : 0;
+                return timeA - timeB;
             });
 
             // Render Results
@@ -424,6 +488,9 @@ function initSearchEngine() {
                 </div>
             `;
         }).join('');
+
+        // Record real-time impressions ONLY for search result ads
+        recordAdImpressions(ads, query);
     }
 }
 
