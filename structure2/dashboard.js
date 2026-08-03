@@ -2,14 +2,8 @@
 //  DASHBOARD DATA  — edit these objects to change the charts
 // ============================================================
 
-// Traffic by channel  (values sum to 100)
-const channelData = [
-    { label: 'direct search',   value: 35.00, color: '#1a3a6b' },
-    { label: 'desktop search',  value: 25.00, color: '#17b8b0' },
-    { label: 'trending ad',     value: 20.00, color: '#7c5cd0' },
-    { label: 'mobile search',   value: 12.00, color: '#f2795a' },
-    { label: 'category tags',   value:  8.00, color: '#4ade80' },
-];
+// Traffic by channel (populates in real-time from search_events)
+const channelData = [];
 
 // Ad platforms shared by both bar charts
 const adPlatforms = [
@@ -75,6 +69,20 @@ function renderChannelChart(customData) {
 
     const dataToRender = customData || channelData;
 
+    // Remove old lines and labels
+    svg.innerHTML = '';
+    wrap.querySelectorAll('.channel-label, .empty-channel-msg').forEach(el => el.remove());
+
+    if (!dataToRender || dataToRender.length === 0) {
+        donut.style.background = 'rgba(255,255,255,0.08)';
+        const msg = document.createElement('div');
+        msg.className = 'empty-channel-msg';
+        msg.style.cssText = 'position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:rgba(255,255,255,0.4); font-size:11px; font-weight:500; text-align:center; white-space:nowrap; pointer-events:none;';
+        msg.innerText = 'No Search Events Yet';
+        wrap.appendChild(msg);
+        return;
+    }
+
     // --- conic-gradient ---
     let gradient = '';
     let cumulative = 0;
@@ -92,10 +100,6 @@ function renderChannelChart(customData) {
     const outerR = 74;          // half of donut width:148px
     const lineR  = 86;          // line start (just outside donut edge)
     const lineEndR = 98;        // line end (tip of connector)
-
-    // Remove old lines and labels
-    svg.innerHTML = '';
-    wrap.querySelectorAll('.channel-label').forEach(el => el.remove());
 
     let angle = 0;
     dataToRender.forEach(seg => {
