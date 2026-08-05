@@ -15,8 +15,21 @@ document.addEventListener('DOMContentLoaded', () => {
 // --- User Session & Ad Click Tracker ---
 let currentSessionDocId = null;
 
+function getFirestoreDb() {
+    if (typeof getDb === 'function') {
+        const d = getDb();
+        if (d) return d;
+    }
+    if (typeof db !== 'undefined' && db) return db;
+    if (typeof firebase !== 'undefined' && typeof firebase.firestore === 'function') {
+        return firebase.firestore();
+    }
+    return null;
+}
+
 function initHomepageSessionTracker() {
-    if (typeof db === 'undefined' || !db) return;
+    const dbInstance = getFirestoreDb();
+    if (!dbInstance) return;
 
     // Check if session ID already exists in sessionStorage for this user session
     const existingSessionId = sessionStorage.getItem('ksearch_session_id');
@@ -26,11 +39,11 @@ function initHomepageSessionTracker() {
         console.log('Reusing existing session ID:', currentSessionDocId);
     } else {
         // 1. Create exactly 1 session document on homepage load
-        db.collection('site_sessions').add({
+        dbInstance.collection('site_sessions').add({
             type: 'site_session',
             durationSeconds: 0, // Duration measured only when user visits ad website
             visitedAd: false,
-            createdAt: (typeof firebase !== 'undefined' && firebase.firestore && firebase.firestore.FieldValue.serverTimestamp) 
+            createdAt: (typeof firebase !== 'undefined' && firebase.firestore && firebase.firestore.FieldValue && firebase.firestore.FieldValue.serverTimestamp) 
                 ? firebase.firestore.FieldValue.serverTimestamp() 
                 : new Date()
         }).then(docRef => {
@@ -120,7 +133,7 @@ function renderRecentSearchesFeed() {
             if (query && searchInput) {
                 searchInput.value = query;
                 if (typeof window.triggerHomeSearch === 'function') {
-                    window.triggerHomeSearch(query, 'recent_chip');
+                    window.triggerHomeSearch(query, 'suggestions_tags');
                 }
             }
         });
@@ -128,10 +141,11 @@ function renderRecentSearchesFeed() {
 }
 
 function handleAdClick(adId) {
-    if (!adId || typeof db === 'undefined' || !db) return;
+    const dbInstance = getFirestoreDb();
+    if (!adId || !dbInstance) return;
 
     // 1. Record Click (+1 in ad_campaigns)
-    db.collection('ad_campaigns').doc(adId).update({
+    dbInstance.collection('ad_campaigns').doc(adId).update({
         clicks: firebase.firestore.FieldValue.increment(1)
     }).then(() => {
         console.log('Firestore click count incremented for ad campaign:', adId);
@@ -153,13 +167,14 @@ function syncAdVisitDuration() {
     const sessionId = currentSessionDocId || sessionStorage.getItem('ksearch_session_id');
     const adVisitStartTime = sessionStorage.getItem('ad_visit_start_time');
     const adId = sessionStorage.getItem('ad_visited_id');
+    const dbInstance = getFirestoreDb();
 
-    if (!sessionId || !adVisitStartTime || typeof db === 'undefined' || !db) return;
+    if (!sessionId || !adVisitStartTime || !dbInstance) return;
 
     // Calculate elapsed time spent visiting ad website (minimum 15s to 120s)
     const elapsedSeconds = Math.max(15, Math.round((Date.now() - Number(adVisitStartTime)) / 1000));
 
-    db.collection('site_sessions').doc(sessionId).update({
+    dbInstance.collection('site_sessions').doc(sessionId).update({
         durationSeconds: elapsedSeconds,
         visitedAd: true,
         adId: adId || null
@@ -191,8 +206,9 @@ async function loadTrendingHighestPaidAds() {
 
     try {
         let campaigns = [];
-        if (typeof db !== 'undefined' && db) {
-            const snapshot = await db.collection('ad_campaigns').get();
+        const dbInstance = getFirestoreDb();
+        if (dbInstance) {
+            const snapshot = await dbInstance.collection('ad_campaigns').get();
             snapshot.forEach(doc => {
                 const data = doc.data();
                 if (data.status === 'Active' || !data.status) {
@@ -252,6 +268,8 @@ async function loadTrendingHighestPaidAds() {
                 const adId = this.getAttribute('data-ad-id');
                 const url = this.getAttribute('data-url');
 
+                logSearchEvent('featured_events');
+
                 if (adId) {
                     handleAdClick(adId);
                 }
@@ -271,7 +289,8 @@ async function loadTrendingHighestPaidAds() {
 const recordedSearchImpressions = new Set();
 
 function recordAdImpressions(ads, searchQuery) {
-    if (!ads || !Array.isArray(ads) || typeof db === 'undefined' || !db) return;
+    const dbInstance = getFirestoreDb();
+    if (!ads || !Array.isArray(ads) || !dbInstance) return;
 
     const cleanQuery = (searchQuery || '').trim().toLowerCase();
 
@@ -283,7 +302,7 @@ function recordAdImpressions(ads, searchQuery) {
         if (recordedSearchImpressions.has(key)) return;
         recordedSearchImpressions.add(key);
 
-        db.collection('ad_campaigns').doc(ad.id).update({
+        dbInstance.collection('ad_campaigns').doc(ad.id).update({
             impressions: firebase.firestore.FieldValue.increment(1)
         }).then(() => {
             console.log(`Real-time search impression recorded for search "${cleanQuery}" on campaign: ${ad.id}`);
@@ -295,23 +314,36 @@ function recordAdImpressions(ads, searchQuery) {
 
 // --- Search Event Logging for Real-Time Channel Analytics ---
 function logSearchEvent(sourceType) {
-    if (typeof db === 'undefined' || !db) return;
+    const dbInstance = getFirestoreDb();
+    if (!dbInstance) {
+        console.warn('Firestore instance not available for logSearchEvent');
+        return;
+    }
 
-    const isMobile = window.innerWidth < 768;
-    const channelName = sourceType || 'direct_search';
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+    
+    let finalChannel = sourceType || 'direct_search';
+    if (isMobile && finalChannel === 'direct_search') {
+        finalChannel = 'mobile_search';
+    } else if (!isMobile && finalChannel === 'direct_search') {
+        finalChannel = 'desktop_search';
+    }
 
-    db.collection('search_events').add({
-        channel: channelName,
+    console.log(`[ksearch Analytics] Logging search event: channel="${finalChannel}", device="${isMobile ? 'mobile' : 'desktop'}"`);
+
+    dbInstance.collection('search_events').add({
+        channel: finalChannel,
         device: isMobile ? 'mobile' : 'desktop',
-        createdAt: (typeof firebase !== 'undefined' && firebase.firestore && firebase.firestore.FieldValue.serverTimestamp)
+        createdAt: (typeof firebase !== 'undefined' && firebase.firestore && firebase.firestore.FieldValue && firebase.firestore.FieldValue.serverTimestamp)
             ? firebase.firestore.FieldValue.serverTimestamp()
             : new Date()
-    }).then(() => {
-        console.log(`Log search event (${channelName}, ${isMobile ? 'mobile' : 'desktop'}) recorded in Firestore.`);
+    }).then(docRef => {
+        console.log(`[ksearch Analytics] Search event logged successfully! ID: ${docRef.id}, Channel: ${finalChannel}`);
     }).catch(err => {
-        console.warn('Error logging search event:', err);
+        console.error('[ksearch Analytics] Error logging search event to Firestore:', err);
     });
 }
+
 
 // --- Search Engine Keyword Matching & Bidding Rank Logic ---
 function initSearchEngine() {
@@ -358,7 +390,7 @@ function initSearchEngine() {
         tag.addEventListener('click', function () {
             const tagQuery = this.innerText.toLowerCase().trim();
             searchInput.value = tagQuery;
-            performSearch(tagQuery, 'category_tag');
+            performSearch(tagQuery, 'suggestions_tags');
         });
     });
 
@@ -389,8 +421,9 @@ function initSearchEngine() {
             let campaigns = [];
 
             // Query Firestore database
-            if (typeof db !== 'undefined' && db) {
-                const snapshot = await db.collection('ad_campaigns').get();
+            const dbInstance = getFirestoreDb();
+            if (dbInstance) {
+                const snapshot = await dbInstance.collection('ad_campaigns').get();
                 snapshot.forEach(doc => {
                     campaigns.push({ id: doc.id, ...doc.data() });
                 });

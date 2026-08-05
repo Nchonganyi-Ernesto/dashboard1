@@ -3,7 +3,12 @@
 // ============================================================
 
 // Traffic by channel (populates in real-time from search_events)
-const channelData = [];
+const channelData = [
+    { label: 'mobile search',      value: 30.00, color: '#f2795a' },
+    { label: 'desktop search',     value: 30.00, color: '#17b8b0' },
+    { label: 'featured events',    value: 20.00, color: '#7c5cd0' },
+    { label: 'suggestions & tags', value: 20.00, color: '#4ade80' },
+];
 
 // Ad platforms shared by both bar charts
 const adPlatforms = [
@@ -67,7 +72,7 @@ function renderChannelChart(customData) {
     const svg   = document.getElementById('channel-lines');
     if (!wrap || !donut || !svg) return;
 
-    const dataToRender = customData || channelData;
+    const dataToRender = customData !== undefined ? customData : channelData;
 
     // Remove old lines and labels
     svg.innerHTML = '';
@@ -146,57 +151,61 @@ function renderChannelChart(customData) {
 //  REAL-TIME SEARCH EVENTS CHANNEL TRACKER
 // ============================================================
 function initRealtimeChannelTracker() {
-    if (typeof firebase === 'undefined' || !firebase.firestore) return;
-
-    const dbInstance = firebase.firestore();
+    const dbInstance = (typeof getDb === 'function' ? getDb() : null) || (typeof db !== 'undefined' && db ? db : null) || (typeof firebase !== 'undefined' && typeof firebase.firestore === 'function' ? firebase.firestore() : null);
+    if (!dbInstance) return;
 
     dbInstance.collection('search_events').onSnapshot(snapshot => {
         if (snapshot.empty) {
-            renderChannelChart(channelData);
+            console.log('[ksearch Admin] No search events in database yet. Showing empty state.');
+            renderChannelChart([]);
             return;
         }
 
         const counts = {
-            direct_search: 0,
-            trending_insights: 0,
             mobile_search: 0,
             desktop_search: 0,
-            category_tag: 0
+            featured_events: 0,
+            suggestions_tags: 0
         };
 
         let total = 0;
         snapshot.forEach(doc => {
             const data = doc.data();
-            const ch = data.channel || 'direct_search';
-            const dev = data.device || 'desktop';
+            const ch = data.channel || '';
+            const dev = data.device || '';
 
-            if (ch === 'direct_search') counts.direct_search++;
-            else if (ch === 'trending_insights') counts.trending_insights++;
-            else if (ch === 'category_tag') counts.category_tag++;
-            else counts.direct_search++;
+            if (ch === 'mobile_search' || dev === 'mobile') {
+                counts.mobile_search++;
+            } else if (ch === 'featured_events' || ch === 'trending_insights') {
+                counts.featured_events++;
+            } else if (ch === 'suggestions_tags' || ch === 'category_tag' || ch === 'recent_chip') {
+                counts.suggestions_tags++;
+            } else {
+                counts.desktop_search++;
+            }
 
-            if (dev === 'mobile') counts.mobile_search++;
-            else counts.desktop_search++;
-
-            total += 2; // channel + device
+            total++;
         });
 
-        if (total === 0) return;
+        if (total === 0) {
+            renderChannelChart([]);
+            return;
+        }
 
         const liveChannelData = [
-            { label: 'direct search',   value: (counts.direct_search / total) * 100,   color: '#1a3a6b' },
-            { label: 'trending ad',     value: (counts.trending_insights / total) * 100, color: '#7c5cd0' },
-            { label: 'mobile search',   value: (counts.mobile_search / total) * 100,   color: '#f2795a' },
-            { label: 'desktop search',  value: (counts.desktop_search / total) * 100,  color: '#17b8b0' },
-            { label: 'category tags',   value: (counts.category_tag / total) * 100,    color: '#4ade80' },
+            { label: 'mobile search',      value: (counts.mobile_search / total) * 100,      color: '#f2795a' },
+            { label: 'desktop search',     value: (counts.desktop_search / total) * 100,     color: '#17b8b0' },
+            { label: 'featured events',    value: (counts.featured_events / total) * 100,    color: '#7c5cd0' },
+            { label: 'suggestions & tags', value: (counts.suggestions_tags / total) * 100,  color: '#4ade80' },
         ].filter(seg => seg.value > 0);
 
         renderChannelChart(liveChannelData);
-        console.log('Real-Time Channel Donut Chart updated with live search events!');
+        console.log(`[ksearch Admin] Real-Time Channel Donut Chart updated with ${total} live search events!`, liveChannelData);
     }, err => {
         console.error('Error listening to search_events:', err);
     });
 }
+
 
 
 // ============================================================
@@ -315,8 +324,10 @@ function initRealtimeUsersTracker() {
         });
 
     }, error => {
-        console.error('Error listening to users collection:', error);
+        console.warn('Firestore users listener error (check security rules):', error.message);
+        if (usersValEl) usersValEl.innerText = '0';
     });
+
 }
 
 
@@ -538,8 +549,21 @@ function formatSecondsToHHMMSS(totalSeconds) {
 
 
 // ============================================================
-//  INIT
+//  INIT & UTILITIES
 // ============================================================
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>'"]/g, 
+        tag => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            "'": '&#39;',
+            '"': '&quot;'
+        }[tag] || tag)
+    );
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     renderChannelChart();
 
@@ -578,3 +602,4 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+

@@ -18,5 +18,20 @@ if (typeof firebase !== 'undefined' && !firebase.apps.length) {
 }
 
 // Global Auth & Firestore references safely initialized
-const auth = (typeof firebase !== 'undefined' && typeof firebase.auth === 'function') ? firebase.auth() : null;
-const db = (typeof firebase !== 'undefined' && typeof firebase.firestore === 'function') ? firebase.firestore() : null;
+let auth = (typeof firebase !== 'undefined' && typeof firebase.auth === 'function') ? firebase.auth() : null;
+let db = (typeof firebase !== 'undefined' && typeof firebase.firestore === 'function') ? firebase.firestore() : null;
+
+function getDb() {
+    if (!db && typeof firebase !== 'undefined' && typeof firebase.firestore === 'function') {
+        db = firebase.firestore();
+    }
+    return db;
+}
+
+function getAuth() {
+    if (!auth && typeof firebase !== 'undefined' && typeof firebase.auth === 'function') {
+        auth = firebase.auth();
+    }
+    return auth;
+}
+
