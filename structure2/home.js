@@ -30,38 +30,7 @@ function getFirestoreDb() {
 function initHomepageSessionTracker() {
     const dbInstance = getFirestoreDb();
     if (!dbInstance) return;
-
-    // Check if session ID already exists in sessionStorage for this user session
-    const existingSessionId = sessionStorage.getItem('ksearch_session_id');
-
-    if (existingSessionId) {
-        currentSessionDocId = existingSessionId;
-        console.log('Reusing existing session ID:', currentSessionDocId);
-    } else {
-        // 1. Create exactly 1 session document on homepage load
-        dbInstance.collection('site_sessions').add({
-            type: 'site_session',
-            durationSeconds: 0, // Duration measured only when user visits ad website
-            visitedAd: false,
-            createdAt: (typeof firebase !== 'undefined' && firebase.firestore && firebase.firestore.FieldValue && firebase.firestore.FieldValue.serverTimestamp) 
-                ? firebase.firestore.FieldValue.serverTimestamp() 
-                : new Date()
-        }).then(docRef => {
-            currentSessionDocId = docRef.id;
-            sessionStorage.setItem('ksearch_session_id', docRef.id);
-            console.log('Recorded new session in site_sessions with ID:', currentSessionDocId);
-        }).catch(err => {
-            console.error('Error creating session:', err);
-        });
-    }
-
-    // Sync ad website duration when window unloads or tab changes
-    window.addEventListener('beforeunload', syncAdVisitDuration);
-    document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'hidden') {
-            syncAdVisitDuration();
-        }
-    });
+    console.log('[ksearch Analytics] Homepage session tracker active. Sessions are recorded strictly when visiting ad websites from homepage clicks.');
 }
 
 // --- Recent Searches Feed (User Search History) ---
@@ -140,49 +109,49 @@ function renderRecentSearchesFeed() {
     });
 }
 
-function handleAdClick(adId) {
+function prepareAdTargetUrl(baseUrl, adId) {
+    if (!baseUrl || baseUrl === '#') return '#';
+    const sessionId = 'ks_sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+    
+    // Create site_session record in Firestore synchronously triggered
     const dbInstance = getFirestoreDb();
-    if (!adId || !dbInstance) return;
+    if (dbInstance && adId) {
+        dbInstance.collection('ad_campaigns').doc(adId).update({
+            clicks: firebase.firestore.FieldValue.increment(1)
+        }).catch(() => {});
 
-    // 1. Record Click (+1 in ad_campaigns)
-    dbInstance.collection('ad_campaigns').doc(adId).update({
-        clicks: firebase.firestore.FieldValue.increment(1)
-    }).then(() => {
-        console.log('Firestore click count incremented for ad campaign:', adId);
-    }).catch(err => {
-        console.error('Error updating click count in Firestore:', err);
-    });
+        dbInstance.collection('site_sessions').doc(sessionId).set({
+            sessionId: sessionId,
+            adId: adId,
+            src: 'homepage_ad',
+            durationSeconds: 0,
+            pageClicks: 0,
+            visitedAd: true,
+            createdAt: (typeof firebase !== 'undefined' && firebase.firestore && firebase.firestore.FieldValue) 
+                ? firebase.firestore.FieldValue.serverTimestamp() 
+                : new Date()
+        }).then(() => {
+            console.log(`[ksearch Analytics] Session ${sessionId} successfully created for ad ${adId}`);
+        }).catch(err => {
+            console.error('Error creating site_sessions record:', err);
+        });
+    }
 
-    // 2. DO NOT create another session (same user)
-    // 3. Measure duration only when user visits the ad website
-    const adClickTime = Date.now();
-    sessionStorage.setItem('ad_visit_start_time', adClickTime.toString());
-    sessionStorage.setItem('ad_visited_id', adId);
-
-    // Update existing session document with ad visit duration
-    syncAdVisitDuration();
+    try {
+        const urlObj = new URL(baseUrl, window.location.href);
+        urlObj.searchParams.set('campaign_id', adId);
+        urlObj.searchParams.set('session_id', sessionId);
+        urlObj.searchParams.set('src', 'homepage_ad');
+        return urlObj.toString();
+    } catch (e) {
+        const sep = baseUrl.includes('?') ? '&' : '?';
+        return baseUrl + sep + 'campaign_id=' + encodeURIComponent(adId) + '&session_id=' + encodeURIComponent(sessionId) + '&src=homepage_ad';
+    }
 }
 
-function syncAdVisitDuration() {
-    const sessionId = currentSessionDocId || sessionStorage.getItem('ksearch_session_id');
-    const adVisitStartTime = sessionStorage.getItem('ad_visit_start_time');
-    const adId = sessionStorage.getItem('ad_visited_id');
-    const dbInstance = getFirestoreDb();
-
-    if (!sessionId || !adVisitStartTime || !dbInstance) return;
-
-    // Calculate elapsed time spent visiting ad website (minimum 15s to 120s)
-    const elapsedSeconds = Math.max(15, Math.round((Date.now() - Number(adVisitStartTime)) / 1000));
-
-    dbInstance.collection('site_sessions').doc(sessionId).update({
-        durationSeconds: elapsedSeconds,
-        visitedAd: true,
-        adId: adId || null
-    }).then(() => {
-        console.log(`Updated ad visit session duration: ${elapsedSeconds}s for session ${sessionId}`);
-    }).catch(err => {
-        console.warn('Failed to update ad visit duration:', err);
-    });
+function handleAdClick(adId, linkEl) {
+    const rawUrl = linkEl && linkEl.getAttribute ? (linkEl.getAttribute('href') || linkEl.getAttribute('data-url')) : '#';
+    return prepareAdTargetUrl(rawUrl, adId);
 }
 
 // --- Global Click Tracker for All Sponsored Ad Links & Cards ---
@@ -192,8 +161,11 @@ function initGlobalClickTracker() {
         const adLink = e.target.closest('.ad-url-link');
         if (adLink) {
             const adId = adLink.getAttribute('data-ad-id');
-            if (adId) {
-                handleAdClick(adId);
+            const rawUrl = adLink.getAttribute('href');
+            if (adId && rawUrl && rawUrl !== '#') {
+                e.preventDefault();
+                const taggedUrl = prepareAdTargetUrl(rawUrl, adId);
+                window.open(taggedUrl, '_blank');
             }
         }
     });
@@ -245,10 +217,6 @@ async function loadTrendingHighestPaidAds() {
 
         trendingGrid.innerHTML = topAds.map(ad => {
             let targetUrl = ad.targetUrl || '#';
-            if (targetUrl !== '#' && ad.id) {
-                const sep = targetUrl.includes('?') ? '&' : '?';
-                targetUrl = targetUrl + sep + 'campaign_id=' + encodeURIComponent(ad.id);
-            }
             return `
                 <div class="card trending-ad-card" data-url="${escapeHtml(targetUrl)}" data-ad-id="${ad.id}">
                     <div class="card-top">
@@ -270,12 +238,9 @@ async function loadTrendingHighestPaidAds() {
 
                 logSearchEvent('featured_events');
 
-                if (adId) {
-                    handleAdClick(adId);
-                }
-
-                if (url && url !== '#') {
-                    window.open(url, '_blank');
+                if (url && url !== '#' && adId) {
+                    const taggedUrl = prepareAdTargetUrl(url, adId);
+                    window.open(taggedUrl, '_blank');
                 }
             });
         });

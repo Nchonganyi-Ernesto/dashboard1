@@ -383,6 +383,23 @@ body {
     background: #22c55e;
 }
 
+/* ksearch Native Ad Category Legend Dots */
+.legend-dot-search {
+    background: #4338ca;
+}
+
+.legend-dot-trending {
+    background: #7c5cd0;
+}
+
+.legend-dot-featured {
+    background: #17b8b0;
+}
+
+.legend-dot-banner {
+    background: #f2795a;
+}
+
 .spend-chart {
     position: relative;
     height: 130px;
@@ -437,28 +454,82 @@ body {
     height: 100%;
     justify-content: flex-end;
     border-radius: 3px;
-    overflow: hidden;
+    position: relative;
+    cursor: pointer;
 }
 
-.spend-bar {
+.spend-tooltip {
+    position: absolute;
+    bottom: 105%;
+    left: 50%;
+    transform: translateX(-50%) translateY(5px);
+    background: #1e293b;
+    color: #ffffff;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.3;
+    text-align: center;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+    z-index: 20;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.spend-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 4px;
+    border-style: solid;
+    border-color: #1e293b transparent transparent transparent;
+}
+
+.spend-bar-group:hover .spend-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Single Bar Daily Spend Indicator */
+.legend-dot-total-spend {
+    background: linear-gradient(135deg, #4338ca 0%, #6366f1 100%);
+}
+
+.bar-daily-spend {
     width: 100%;
+    background: linear-gradient(180deg, #6366f1 0%, #4338ca 100%);
+    border-radius: 4px 4px 0 0;
+    transition: height 0.3s ease, filter 0.2s ease;
 }
 
-.bar-bing {
-    background: #2f6fd6;
+.spend-bar-group:hover .bar-daily-spend {
+    filter: brightness(1.2);
 }
 
-.bar-googleads {
-    background: #4fc3f7;
+/* ksearch Native Ad Category Bar Fills */
+.bar-ksearch-search {
+    background: #4338ca;
 }
 
-.bar-linkedinads {
+.bar-ksearch-trending {
     background: #7c5cd0;
 }
 
-.bar-metaads {
-    background: #22c55e;
+.bar-ksearch-featured {
+    background: #17b8b0;
 }
+
+.bar-ksearch-banner {
+    background: #f2795a;
+}
+
 
 .spend-months {
     display: flex;
@@ -469,10 +540,23 @@ body {
     color: #9aa2b8;
 }
 
-/* Weekly CPC */
+
+/* Weekly / Daily CPC */
 .cpc-card .chart-card-title {
     font-size: 19px;
     font-weight: 800;
+}
+
+/* Single Bar Daily CPC Indicator */
+.legend-dot-daily-cpc {
+    background: linear-gradient(135deg, #17b8b0 0%, #14b8a6 100%);
+}
+
+.bar-daily-cpc {
+    width: 100%;
+    background: linear-gradient(180deg, #14b8a6 0%, #0d9488 100%);
+    border-radius: 4px 4px 0 0;
+    transition: height 0.3s ease, filter 0.2s ease;
 }
 
 .cpc-chart {
@@ -486,7 +570,7 @@ body {
     top: 0;
     left: 0;
     height: 100%;
-    width: 28px;
+    width: 32px;
     font-size: 13px;
     font-weight: 600;
     color: #9aa2b8;
@@ -503,13 +587,17 @@ body {
 }
 
 .cpc-gridlines span:nth-child(2) {
+    top: 50%;
+}
+
+.cpc-gridlines span:nth-child(3) {
     top: 100%;
 }
 
 .cpc-bars {
     position: absolute;
     top: 0;
-    left: 32px;
+    left: 36px;
     right: 0;
     height: 100%;
     display: flex;
@@ -521,25 +609,32 @@ body {
 .cpc-bar-group {
     flex: 1;
     display: flex;
+    flex-direction: column;
     align-items: flex-end;
-    justify-content: center;
-    gap: 2px;
+    justify-content: flex-end;
     height: 100%;
+    position: relative;
+    cursor: pointer;
+}
+
+.cpc-bar-group:hover .bar-daily-cpc {
+    filter: brightness(1.2);
 }
 
 .cpc-bar {
-    flex: 1;
-    border-radius: 2px 2px 0 0;
+    width: 100%;
+    border-radius: 4px 4px 0 0;
 }
 
 .cpc-months {
     display: flex;
     justify-content: space-between;
-    padding-left: 32px;
+    padding-left: 36px;
     font-size: 13px;
     font-weight: 600;
     color: #9aa2b8;
 }
+
 
 /* ===== TABLES ROW ===== */
 .tables-row {

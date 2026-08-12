@@ -123,7 +123,7 @@ function renderHistoryTable(campaigns) {
     if (campaigns.length === 0) {
         historyTableBody.innerHTML = `
             <tr>
-                <td colspan="5" style="text-align: center; color: rgba(255,255,255,0.5); padding: 25px;">
+                <td colspan="6" style="text-align: center; color: rgba(255,255,255,0.5); padding: 25px;">
                     No ad applications submitted yet. Click "Apply for New Ad" to get started!
                 </td>
             </tr>
@@ -147,9 +147,25 @@ function renderHistoryTable(campaigns) {
                 <td>${dateStr}</td>
                 <td><span class="status-badge ${statusClass}"><i class="fa-solid fa-circle"></i> ${escapeHtml(statusLabel)}</span></td>
                 <td>${Number(ad.clicks || 0).toLocaleString()}</td>
+                <td>
+                    <button class="btn-get-snippet" data-ad-id="${ad.id}" data-campaign-name="${escapeHtml(ad.campaignName || '')}" style="background: rgba(99, 102, 241, 0.2); border: 1px solid #6366f1; color: #a5b4fc; border-radius: 6px; padding: 4px 8px; font-size: 11px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
+                        <i class="fa-solid fa-code"></i> Get Snippet
+                    </button>
+                </td>
             </tr>
         `;
     }).join('');
+
+    // Attach click listeners to "Get Snippet" buttons
+    historyTableBody.querySelectorAll('.btn-get-snippet').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const adId = this.getAttribute('data-ad-id');
+            const cName = this.getAttribute('data-campaign-name');
+            if (adId) {
+                displayTrackingSnippet(adId, cName);
+            }
+        });
+    });
 }
 
 function updateUserKPIs(appliedCount, activeCount, clicksCount) {
@@ -172,6 +188,60 @@ function updateUserKPIs(appliedCount, activeCount, clicksCount) {
     // History badge count in menu dropdown
     const countBadge = document.querySelector('.count-badge');
     if (countBadge) countBadge.innerText = `${activeCount} Active`;
+}
+
+// --- Display Tracking Snippet & Payment Integration Code ---
+function displayTrackingSnippet(campaignId, campaignName) {
+    const container = document.getElementById('snippetContainer');
+    const code1 = document.getElementById('snippetCode1');
+    const code2 = document.getElementById('snippetCode2');
+    const closeBtn = document.getElementById('closeSnippetBtn');
+    const copyBtn1 = document.getElementById('copySnippetBtn1');
+    const copyBtn2 = document.getElementById('copySnippetBtn2');
+
+    if (!container || !code1 || !code2) return;
+
+    const embedScriptText = `<!-- ksearch Ad Tracking Script (Embed in <head> or <body> of your target website) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="https://intern-board2.netlify.app/ksearch-tracker.js"></script>`;
+
+    const paymentScriptText = `<!-- Include ONLY on your Order Success / Thank You page -->
+<script>
+  if (window.KSearchTracker) {
+    window.KSearchTracker.trackPayment({
+      amountFCFA: 15000, // Replace dynamically with customer checkout total in FCFA
+      orderId: 'ORD_' + Date.now(),
+      itemNames: '${escapeHtml(campaignName || 'Ad Conversion Product')}'
+    });
+  }
+</script>`;
+
+    code1.innerText = embedScriptText;
+    code2.innerText = paymentScriptText;
+    container.style.display = 'block';
+
+    if (closeBtn) {
+        closeBtn.onclick = () => { container.style.display = 'none'; };
+    }
+
+    if (copyBtn1) {
+        copyBtn1.onclick = () => {
+            navigator.clipboard.writeText(embedScriptText);
+            copyBtn1.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
+            setTimeout(() => { copyBtn1.innerHTML = '<i class="fa-solid fa-copy"></i> Copy Script'; }, 2000);
+        };
+    }
+
+    if (copyBtn2) {
+        copyBtn2.onclick = () => {
+            navigator.clipboard.writeText(paymentScriptText);
+            copyBtn2.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
+            setTimeout(() => { copyBtn2.innerHTML = '<i class="fa-solid fa-copy"></i> Copy Payment Code'; }, 2000);
+        };
+    }
+
+    container.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 // --- Submit Ad Application to Firestore ---
@@ -221,10 +291,12 @@ function initAdForm() {
         };
 
         try {
+            let createdId = null;
             if (db) {
                 // Save document to Firestore collection 'ad_campaigns'
-                await db.collection('ad_campaigns').add(adData);
-                console.log('Ad campaign successfully written to Firestore!');
+                const docRef = await db.collection('ad_campaigns').add(adData);
+                createdId = docRef.id;
+                console.log('Ad campaign successfully written to Firestore with ID:', createdId);
             } else {
                 console.warn('Firestore instance not available, saving locally fallback.');
             }
@@ -232,13 +304,18 @@ function initAdForm() {
             showToast(`Successfully applied for "${campaignName}"!`);
             form.reset();
 
+            // Display snippet code for advertiser
+            if (createdId) {
+                displayTrackingSnippet(createdId, campaignName);
+            }
+
         } catch (error) {
             console.error('Error submitting ad campaign to Firestore:', error);
             showToast('Failed to submit ad application. Please try again.');
         } finally {
             if (submitBtn) {
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>Submit Ad Application</span>';
+                submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>Submit Ad Application & Pay Budget</span>';
             }
         }
     });

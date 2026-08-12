@@ -10,7 +10,12 @@ const channelData = [
     { label: 'suggestions & tags', value: 20.00, color: '#4ade80' },
 ];
 
-// Ad platforms shared by both bar charts
+// Native ksearch Daily Ad Spend Category
+const ksearchDailySpendCategory = [
+    { key: 'total_spend', label: 'Total Daily Ad Spend (FCFA)', cssClass: 'bar-daily-spend', dotClass: 'legend-dot-total-spend' }
+];
+
+// External Ad platforms shared by CPC chart
 const adPlatforms = [
     { key: 'bing',      label: 'Bing ads',     cssClass: 'bar-bing',       dotClass: 'legend-dot-bing'       },
     { key: 'googleads', label: 'Google ads',   cssClass: 'bar-googleads',  dotClass: 'legend-dot-googleads'  },
@@ -18,49 +23,50 @@ const adPlatforms = [
     { key: 'meta',      label: 'Meta ads',     cssClass: 'bar-metaads',    dotClass: 'legend-dot-metaads'    },
 ];
 
-// Weekly ad spend — actual $ values per week per platform
-// Each inner array = [bing, googleads, linkedin, meta]
+// Single-bar daily ad spend dataset — Days of the Week (Mon - Sun) in FCFA
+// Computed from Clicks (300 FCFA/click) + Impressions (0.5 FCFA/view)
+// Single-bar daily ad spend dataset — Days of the Week (Mon - Sun) in FCFA
+// Computed dynamically from Clicks (300 FCFA/click) + Impressions (0.5 FCFA/view)
 const spendData = {
-    weeks: ['Apr W1','Apr W2','Apr W3','Apr W4','May W1','May W2','May W3','May W4','May W5'],
-    values: [
-        [32,  28,  24,  20],
-        [40,  32,  28,  24],
-        [44,  36,  30,  26],
-        [48,  38,  32,  28],
-        [46,  36,  30,  26],
-        [42,  34,  28,  24],
-        [38,  30,  26,  22],
-        [28,  22,  18,  16],
-        [12,  10,   8,   6],
+    dayLabels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    values: [[0], [0], [0], [0], [0], [0], [0]],
+    breakdowns: [
+        { clicksCost: 0, impressionsCost: 0 },
+        { clicksCost: 0, impressionsCost: 0 },
+        { clicksCost: 0, impressionsCost: 0 },
+        { clicksCost: 0, impressionsCost: 0 },
+        { clicksCost: 0, impressionsCost: 0 },
+        { clicksCost: 0, impressionsCost: 0 },
+        { clicksCost: 0, impressionsCost: 0 }
     ],
-    maxValue: 200,   // top of the Y axis
-    gridLabels: ['200', '100', '0'],
-    monthLabels: ['Apr 2025', 'May 2025'],
+    maxValue: 1000,
+    gridLabels: ['1,000 FCFA', '500 FCFA', '0 FCFA'],
 };
 
-// Weekly CPC — actual CPC values per week per platform
-// Each inner array = [bing, googleads, linkedin, meta]
+// Native ksearch Daily Click Revenue Category
+const ksearchDailyCpcCategory = [
+    { key: 'click_revenue', label: 'Total Click Revenue (FCFA)', cssClass: 'bar-daily-cpc', dotClass: 'legend-dot-daily-cpc' }
+];
+
+// Single-bar daily click revenue dataset — Days of the Week (Mon - Sun) in FCFA
+// Computed dynamically from Clicks (300 FCFA/click)
 const cpcData = {
-    weeks: ['Apr W1','Apr W2','Apr W3','Apr W4','May W1','May W2','May W3','May W4','May W5','May W10','May W11','May W12','May W13'],
-    values: [
-        [0.275, 0.160, 0.340, 0.220],
-        [0.190, 0.300, 0.225, 0.350],
-        [0.310, 0.200, 0.150, 0.275],
-        [0.225, 0.375, 0.250, 0.175],
-        [0.350, 0.240, 0.300, 0.200],
-        [0.165, 0.260, 0.210, 0.325],
-        [0.290, 0.180, 0.360, 0.240],
-        [0.205, 0.320, 0.190, 0.280],
-        [0.330, 0.220, 0.265, 0.150],
-        [0.180, 0.290, 0.235, 0.340],
-        [0.365, 0.250, 0.170, 0.310],
-        [0.240, 0.350, 0.280, 0.190],
-        [0.270, 0.170, 0.320, 0.225],
+    dayLabels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    values: [[0], [0], [0], [0], [0], [0], [0]],
+    breakdowns: [
+        { clicksCount: 0, revenue: 0 },
+        { clicksCount: 0, revenue: 0 },
+        { clicksCount: 0, revenue: 0 },
+        { clicksCount: 0, revenue: 0 },
+        { clicksCount: 0, revenue: 0 },
+        { clicksCount: 0, revenue: 0 },
+        { clicksCount: 0, revenue: 0 }
     ],
-    maxValue: 0.5,   // top of the Y axis
-    gridLabels: ['0.5', '0.0'],
-    monthLabels: ['Apr 2025', 'May 2025'],
+    maxValue: 1000,
+    gridLabels: ['1,000 FCFA', '500 FCFA', '0 FCFA'],
 };
+
+
 
 
 // ============================================================
@@ -211,16 +217,21 @@ function initRealtimeChannelTracker() {
 // ============================================================
 //  RENDER — Bar chart helper  (shared by spend + CPC)
 // ============================================================
-function renderBarChart({ barsId, legendId, gridlinesId, monthsId, data, barClass, gridType }) {
+// ============================================================
+//  RENDER — Bar chart helper  (shared by spend + CPC)
+// ============================================================
+function renderBarChart({ barsId, legendId, gridlinesId, monthsId, data, barClass, categories }) {
     const barsEl      = document.getElementById(barsId);
     const legendEl    = document.getElementById(legendId);
     const gridEl      = document.getElementById(gridlinesId);
     const monthsEl    = document.getElementById(monthsId);
-    if (!barsEl) return;
+    if (!barsEl || !data) return;
+
+    const catsToUse = categories || (barClass === 'spend-bar' ? ksearchDailySpendCategory : ksearchDailyCpcCategory);
 
     // Legend
     if (legendEl) {
-        legendEl.innerHTML = adPlatforms.map(p =>
+        legendEl.innerHTML = catsToUse.map(p =>
             `<span class="legend-dot-item">
                 <span class="legend-dot ${p.dotClass}"></span>${p.label}
             </span>`
@@ -228,25 +239,68 @@ function renderBarChart({ barsId, legendId, gridlinesId, monthsId, data, barClas
     }
 
     // Gridlines
-    if (gridEl) {
+    if (gridEl && data.gridLabels) {
         gridEl.innerHTML = data.gridLabels.map(l => `<span>${l}</span>`).join('');
     }
 
-    // Month labels
+    // Days / Month labels
     if (monthsEl) {
-        monthsEl.innerHTML = data.monthLabels.map(m => `<span>${m}</span>`).join('');
+        const labels = data.dayLabels || data.monthLabels || data.weeks || [];
+        monthsEl.innerHTML = labels.map(m => `<span>${m}</span>`).join('');
     }
 
     // Bars — height is expressed as % of maxValue
-    barsEl.innerHTML = data.values.map(week => {
-        const bars = adPlatforms.map((p, i) => {
-            const pct = (week[i] / data.maxValue * 100).toFixed(1);
-            return `<div class="${barClass} ${p.cssClass}" style="height:${pct}%"></div>`;
+    if (data.values) {
+        barsEl.innerHTML = data.values.map((groupValues, idx) => {
+            const dayName = (data.dayLabels || data.monthLabels || data.weeks || [])[idx] || `Day ${idx + 1}`;
+            const val = Array.isArray(groupValues) ? groupValues[0] : (groupValues || 0);
+            const safeVal = Number(val || 0);
+            const pct = Math.min(100, Math.max(0, (safeVal / (data.maxValue || 1) * 100))).toFixed(1);
+
+            const bd = (data.breakdowns && data.breakdowns[idx]) ? data.breakdowns[idx] : null;
+
+            let tooltipHTML = '';
+
+            if (barClass === 'spend-bar') {
+                const clicksCost = bd && bd.clicksCost !== undefined ? Number(bd.clicksCost) : 0;
+                const impCost = bd && bd.impressionsCost !== undefined ? Number(bd.impressionsCost) : 0;
+                const clickText = `<br><span style="font-size:10px; color:#cbd5e1;">Clicks: ${clicksCost.toLocaleString()} FCFA</span>`;
+                const impText = `<br><span style="font-size:10px; color:#cbd5e1;">Views: ${impCost.toLocaleString()} FCFA</span>`;
+                tooltipHTML = `
+                    <div class="spend-tooltip">
+                        <strong>${dayName}: ${safeVal.toLocaleString()} FCFA</strong>
+                        ${clickText}${impText}
+                    </div>
+                `;
+            } else {
+                const count = bd && bd.clicksCount !== undefined ? Number(bd.clicksCount) : 0;
+                tooltipHTML = `
+                    <div class="spend-tooltip">
+                        <strong>${dayName} Click Revenue: ${safeVal.toLocaleString()} FCFA</strong>
+                        <br><span style="font-size:10px; color:#cbd5e1;">${count} Click${count === 1 ? '' : 's'} @ 300 FCFA/click</span>
+                    </div>
+                `;
+            }
+
+            const bars = catsToUse.map(p => {
+                return `<div class="${barClass} ${p.cssClass}" style="height:${pct}%" title="${dayName}: ${safeVal.toLocaleString()} FCFA"></div>`;
+            }).join('');
+
+            const groupClass = barClass === 'spend-bar' ? 'spend-bar-group' : 'cpc-bar-group';
+
+            return `
+                <div class="${groupClass}" data-day="${dayName}">
+                    ${bars}
+                    ${tooltipHTML}
+                </div>
+            `;
         }).join('');
-        const groupClass = barClass === 'spend-bar' ? 'spend-bar-group' : 'cpc-bar-group';
-        return `<div class="${groupClass}">${bars}</div>`;
-    }).join('');
+    }
+
 }
+
+
+
 
 
 // ============================================================
@@ -426,7 +480,93 @@ function initRealtimeAdMetricsTracker() {
         currentAdDeliveredCost = impressionCost + clickCost;
         updateROAS();
 
-        // 6. Render Real-Time Ad Source Data Table
+        // 6. Compute Real-Time Daily Ad Spend & Daily Click Revenue Buckets from live campaigns
+        const daySpendBuckets = { Mon: 0, Tue: 0, Wed: 0, Thu: 0, Fri: 0, Sat: 0, Sun: 0 };
+        const clickCostBuckets = { Mon: 0, Tue: 0, Wed: 0, Thu: 0, Fri: 0, Sat: 0, Sun: 0 };
+        const impCostBuckets = { Mon: 0, Tue: 0, Wed: 0, Thu: 0, Fri: 0, Sat: 0, Sun: 0 };
+        const clickCountBuckets = { Mon: 0, Tue: 0, Wed: 0, Thu: 0, Fri: 0, Sat: 0, Sun: 0 };
+
+        const dayKeys = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            const impressions = Number(data.impressions || 0);
+            const clicks = Number(data.clicks || 0);
+
+            let dayIndex = 1; // Default Mon
+            if (data.createdAt && data.createdAt.seconds) {
+                dayIndex = new Date(data.createdAt.seconds * 1000).getDay();
+            } else if (data.createdAt instanceof Date) {
+                dayIndex = data.createdAt.getDay();
+            }
+            const dayKey = dayKeys[dayIndex] || 'Mon';
+
+            const cCost = clicks * 300;
+            const iCost = impressions * 0.5;
+
+            clickCountBuckets[dayKey] += clicks;
+            clickCostBuckets[dayKey] += cCost;
+            impCostBuckets[dayKey] += iCost;
+            daySpendBuckets[dayKey] += (cCost + iCost);
+        });
+
+        const liveDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+        // --- Render Daily Ad Spend Chart (Real-Time Only) ---
+        const maxSpendInWeek = Math.max(...liveDays.map(d => daySpendBuckets[d] || 0), 1000);
+        const dynamicSpendMax = Math.ceil(maxSpendInWeek / 1000) * 1000 || 1000;
+
+        spendData.values = liveDays.map(d => [daySpendBuckets[d] || 0]);
+        spendData.breakdowns = liveDays.map(d => ({
+            clicksCost: clickCostBuckets[d] || 0,
+            impressionsCost: impCostBuckets[d] || 0
+        }));
+        spendData.maxValue = dynamicSpendMax;
+        spendData.gridLabels = [
+            `${dynamicSpendMax.toLocaleString()} FCFA`,
+            `${Math.round(dynamicSpendMax / 2).toLocaleString()} FCFA`,
+            '0 FCFA'
+        ];
+
+        renderBarChart({
+            barsId: 'spend-bars',
+            legendId: 'spend-legend',
+            gridlinesId: 'spend-gridlines',
+            monthsId: 'spend-months',
+            data: spendData,
+            barClass: 'spend-bar',
+            categories: ksearchDailySpendCategory
+        });
+
+        // --- Render Daily Click Revenue Chart (Real-Time Only) ---
+        const maxClickRevInWeek = Math.max(...liveDays.map(d => clickCostBuckets[d] || 0), 1000);
+        const dynamicClickMax = Math.ceil(maxClickRevInWeek / 1000) * 1000 || 1000;
+
+        cpcData.values = liveDays.map(d => [clickCostBuckets[d] || 0]);
+        cpcData.breakdowns = liveDays.map(d => ({
+            clicksCount: clickCountBuckets[d] || 0,
+            revenue: clickCostBuckets[d] || 0
+        }));
+        cpcData.maxValue = dynamicClickMax;
+        cpcData.gridLabels = [
+            `${dynamicClickMax.toLocaleString()} FCFA`,
+            `${Math.round(dynamicClickMax / 2).toLocaleString()} FCFA`,
+            '0 FCFA'
+        ];
+
+        renderBarChart({
+            barsId: 'cpc-bars',
+            legendId: 'cpc-legend',
+            gridlinesId: 'cpc-gridlines',
+            monthsId: 'cpc-months',
+            data: cpcData,
+            barClass: 'cpc-bar',
+            categories: ksearchDailyCpcCategory
+        });
+
+
+        // 7. Render Real-Time Ad Source Data Table
+
         if (tableBodyEl && campaigns.length > 0) {
             tableBodyEl.innerHTML = campaigns.map(c => {
                 const campaignImpressionCost = (c.impressions || 0) * 0.5;
@@ -485,16 +625,20 @@ function initRealtimeSessionsAndPurchasesTracker() {
         }
     }
 
-    // 1. Listen to site_sessions collection
+    // 1. Listen to site_sessions collection (Homepage Ad Sessions Only)
     dbInstance.collection('site_sessions').onSnapshot(snapshot => {
-        currentSessionsCount = snapshot.docs.length;
+        let validHomepageSessions = 0;
         let totalDurationSeconds = 0;
 
         snapshot.forEach(doc => {
             const data = doc.data();
-            totalDurationSeconds += Number(data.durationSeconds || 0);
+            if (data.src === 'homepage_ad' || data.visitedAd || data.adId) {
+                validHomepageSessions++;
+                totalDurationSeconds += Number(data.durationSeconds || 0);
+            }
         });
 
+        currentSessionsCount = validHomepageSessions;
         const avgSeconds = currentSessionsCount > 0 ? Math.round(totalDurationSeconds / currentSessionsCount) : 0;
         const formattedAvgTime = formatSecondsToHHMMSS(avgSeconds);
 
@@ -511,16 +655,20 @@ function initRealtimeSessionsAndPurchasesTracker() {
         console.error('Error listening to site_sessions:', error);
     });
 
-    // 2. Listen to site_purchases collection
+    // 2. Listen to site_purchases collection (Homepage Ad Purchases Only)
     dbInstance.collection('site_purchases').onSnapshot(snapshot => {
-        currentPurchasesCount = snapshot.docs.length;
+        let validHomepagePurchases = 0;
         let totalRevenue = 0;
 
         snapshot.forEach(doc => {
             const data = doc.data();
-            totalRevenue += Number(data.amountFCFA || 0);
+            if (data.src === 'homepage_ad' || data.sessionId || data.campaignId) {
+                validHomepagePurchases++;
+                totalRevenue += Number(data.amountFCFA || data.amount || 0);
+            }
         });
 
+        currentPurchasesCount = validHomepagePurchases;
         currentTotalRevenue = totalRevenue;
 
         if (totalPurchasesValEl) {
