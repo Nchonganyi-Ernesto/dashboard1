@@ -662,7 +662,7 @@ function initRealtimeSessionsAndPurchasesTracker() {
 
         snapshot.forEach(doc => {
             const data = doc.data();
-            if (data.src === 'homepage_ad' || data.sessionId || data.campaignId) {
+            if (data.src === 'homepage_ad' || data.src === 'direct_site' || data.sessionId || data.campaignId) {
                 validHomepagePurchases++;
                 totalRevenue += Number(data.amountFCFA || data.amount || 0);
             }

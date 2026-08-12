@@ -42,23 +42,16 @@
         }
     }
 
-    // 3. Strict Origin Guard: Only track if visitor originated from ksearch homepage
-    const activeSrc = sessionStorage.getItem('ks_src');
-    const activeSessionId = sessionStorage.getItem('ks_session_id');
-    const activeCampaignId = sessionStorage.getItem('ks_campaign_id');
+    // 3. Active Session Check
+    let activeSrc = sessionStorage.getItem('ks_src') || 'direct_site';
+    let activeSessionId = sessionStorage.getItem('ks_session_id') || null;
+    let activeCampaignId = sessionStorage.getItem('ks_campaign_id') || null;
 
-    if (activeSrc !== 'homepage_ad' || !activeSessionId) {
-        console.log('[ksearch-tracker] Visitor did not originate from homepage ad click. Tracking disabled.');
-        window.KSearchTracker = {
-            trackPayment: function () {
-                console.warn('[ksearch-tracker] Payment not recorded: Session did not originate from ksearch homepage ad click.');
-                return Promise.resolve(null);
-            }
-        };
-        return;
+    if (activeSrc === 'homepage_ad' && activeSessionId) {
+        console.log(`[ksearch-tracker] Active ksearch homepage session confirmed: ${activeSessionId}`);
+    } else {
+        console.log('[ksearch-tracker] Visitor viewing site directly (or in test mode). Payment tracking enabled with fallback session.');
     }
-
-    console.log(`[ksearch-tracker] Active ksearch homepage session confirmed: ${activeSessionId}`);
 
     // 4. Get Firestore instance
     function getFirestore() {
@@ -131,13 +124,15 @@
             const orderId = paymentData.orderId || ('ord_' + Date.now());
             const itemNames = paymentData.itemNames || paymentData.items || 'Ad Conversion Purchase';
 
+            const effectiveSessionId = activeSessionId || ('ks_sess_test_' + Date.now());
+
             const purchaseRecord = {
-                sessionId: activeSessionId,
+                sessionId: effectiveSessionId,
                 campaignId: activeCampaignId || null,
                 amountFCFA: amountFCFA,
                 orderId: orderId,
                 items: itemNames,
-                src: 'homepage_ad',
+                src: activeSrc || 'homepage_ad',
                 createdAt: (firebase.firestore && firebase.firestore.FieldValue && firebase.firestore.FieldValue.serverTimestamp) 
                     ? firebase.firestore.FieldValue.serverTimestamp() 
                     : new Date()
