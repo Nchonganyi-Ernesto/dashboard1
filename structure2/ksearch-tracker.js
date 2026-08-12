@@ -91,7 +91,9 @@
             updatedAt: (firebase.firestore && firebase.firestore.FieldValue && firebase.firestore.FieldValue.serverTimestamp) 
                 ? firebase.firestore.FieldValue.serverTimestamp() 
                 : new Date()
-        }, { merge: true }).catch(err => {
+        }, { merge: true }).then(() => {
+            console.log(`[ksearch-tracker] Synced timing: ${durationSeconds}s, clicks: ${pageClickCount} for session: ${activeSessionId}`);
+        }).catch(err => {
             console.warn('[ksearch-tracker] Error syncing session duration:', err);
         });
     }
@@ -112,6 +114,9 @@
 
     // Initial sync
     syncSessionMetrics();
+
+    // Live timing heartbeat interval (syncs every 3 seconds while visitor is active on site)
+    setInterval(syncSessionMetrics, 3000);
 
     // 6. Global Payment Tracker API for Advertiser Website
     window.KSearchTracker = {
